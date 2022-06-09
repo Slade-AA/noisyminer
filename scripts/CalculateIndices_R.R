@@ -5,26 +5,45 @@ library(seewave)
 library(foreach)
 library(doParallel)
 
-wavFiles <- "E:/NoisyMiner_Recordings/BN3/20211109_STUDY/20211109T080000+1100_REC.wav"
+wavFiles <- list.files(path = "E:/NoisyMiner_Recordings/BC1", pattern = "*.wav", recursive = TRUE, full.names = TRUE)
 
-numCores <- detectCores() - 2
+
+#check if indices have already been calculated for any of these files
+originalLength <- length(wavFiles)
+wavFiles <- wavFiles[!file.exists(paste0(gsub("NoisyMiner_Recordings", "NoisyMiner_Indices", dirname(wavFiles)), "/", gsub(".wav", ".RDS", basename(wavFiles))))]
+if (originalLength != length(wavFiles)) {
+  print(paste0(originalLength - length(wavFiles), " recordings have already had indices generated. Generating indices for ", length(wavFiles), " new files."))
+}
+
+#set-up parallel backend
+numCores <- detectCores()
 registerDoParallel(numCores)
 
 time0 <- Sys.time()
 
-recordings <- list()
+#recordings <- list()
 for (wavFile in wavFiles) {
   
-  wavHeader <- readWave(wavFile, header = TRUE)
+  try({wavHeader <- readWave(wavFile, header = TRUE)})
+  if (exists("wavHeader") == FALSE) {
+    print(paste0("Issue with audio recording - Skipping file: ", wavFile))
+    next
+  }
+  
   wavDuration <- floor((wavHeader$samples/wavHeader$sample.rate)/60)
   
   #calculate site, date, and time once per file
   site <- gsub(".*NoisyMiner_Recordings/(.{3})/.*", "\\1", wavFile)
   date <- as.POSIXct(gsub("([0-9]{8}).*", "\\1", basename(wavFile)), format = "%Y%m%d") #extract date of recording from filename
-  if (grepl("REC", wavFile)) {
+  
+  #extract time from filename - multiple file naming conventions are in use in this dataset!
+  if (grepl("T[0-9]{6}\\+", basename(wavFile))) {
     time <- strptime(paste0(gsub("([0-9]{8}).*", "\\1", basename(wavFile)), gsub(".*T([0-9]{6})\\+.*", "\\1", basename(wavFile))), "%Y%m%d%H%M%S")
-  } else {
+  } else if (grepl("^[0-9]{8}_[0-9]{6}_", basename(wavFile))) {
     time <- strptime(paste0(gsub("([0-9]{8}).*", "\\1", basename(wavFile)), gsub(".*_([0-9]{6})_.*", "\\1", basename(wavFile))), "%Y%m%d%H%M%S")
+  } else {
+    print(paste0("Unrecognised file name format - Skipping file: ", wavFile))
+    next
   }
   
   
@@ -42,7 +61,8 @@ for (wavFile in wavFiles) {
     Ht_minute <- th(wav_env) #temporal entropy
     Hf_minute <- sh(meanspec(wavMinute, plot = FALSE)) #spectral entropy
     H_minute <- Ht_minute*Hf_minute #manual computation using Ht and Hf - significant speed improvement
-    BI_minute <- bioacoustic_index(wavMinute, min_freq = 400, max_freq = 5000) #default is: "min_freq = 2000, max_freq = 8000"
+    BI_minute <- bioacoustic_index(wavMinute, min_freq = 2000, max_freq = 8000) #default is: "min_freq = 2000, max_freq = 8000"
+    BI_minute_chur <- bioacoustic_index(wavMinute, min_freq = 1166, max_freq = 3646)
     
     indices <- tibble(Site = site,
                       Date = date,
@@ -63,20 +83,26 @@ for (wavFile in wavFiles) {
                       H = H_minute,
                       Ht = Ht_minute, 
                       Hf = Hf_minute, 
-                      BI = BI_minute$left_area)
+                      BI = BI_minute$left_area,
+                      BI_chur = BI_minute_chur$left_area)
     
     return(indices)
   }
   results <- do.call(rbind, results)
-  #write.csv(results, paste0("./Indices/", gsub(".*/(.+).wav", "\\1", wavFile), ".csv"), row.names = F) #save results to csv for each recording
-  recordings[[wavFile]] <- results
+  dir.create(path = gsub("NoisyMiner_Recordings", "NoisyMiner_Indices", dirname(wavFile)), recursive = TRUE, showWarnings = FALSE)
+  saveRDS(results, paste0(gsub("NoisyMiner_Recordings", "NoisyMiner_Indices", dirname(wavFile)), "/", gsub(".wav", ".RDS", basename(wavFile))))
+  
+  remove(wavHeader, wavDuration, site, date, time, results)
 }
-time1 <- Sys.time() #2.051814 mins for 30min file (~55 days for 800 days of recordings) with seewave ACI and NDSI
-#1.470522 mins for 30min file (~39 days for 800 days of recordings) without seewave ACI and NDSI
+time1 <- Sys.time()
 time1 - time0
 stopImplicitCluster()
 
+
+
+#2.051814 mins for 30min file (~55 days for 800 days of recordings) with seewave ACI and NDSI
+#1.470522 mins for 30min file (~39 days for 800 days of recordings) without seewave ACI and NDSI
 #Manually calculating AE from ADI may be fractionally faster than using soundecology function
 #ADI and AEI separate - Time difference of 1.474172 mins
-#ADI with AEI manually calculated - Time difference of 1.434434 mins
+#ADI with AEI manually calculated - Time difference of 1.434434 mins (33.5561 secs on home PC - 15 days for 800 days of recordings)
 
