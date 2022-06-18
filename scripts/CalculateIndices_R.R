@@ -5,8 +5,7 @@ library(seewave)
 library(foreach)
 library(doParallel)
 
-wavFiles <- list.files(path = "E:/NoisyMiner_Recordings/BC1", pattern = "*.wav", recursive = TRUE, full.names = TRUE)
-
+wavFiles <- c(list.files(path = "E:/NoisyMiner_Recordings/Y3", pattern = "*.wav", recursive = TRUE, full.names = TRUE))
 
 #check if indices have already been calculated for any of these files
 originalLength <- length(wavFiles)
@@ -34,13 +33,13 @@ for (wavFile in wavFiles) {
   
   #calculate site, date, and time once per file
   site <- gsub(".*NoisyMiner_Recordings/(.{3})/.*", "\\1", wavFile)
-  date <- as.POSIXct(gsub("([0-9]{8}).*", "\\1", basename(wavFile)), format = "%Y%m%d") #extract date of recording from filename
+  date <- as.POSIXct(gsub(".*([0-9]{8}).*", "\\1", basename(wavFile)), format = "%Y%m%d") #extract date of recording from filename
   
   #extract time from filename - multiple file naming conventions are in use in this dataset!
   if (grepl("T[0-9]{6}\\+", basename(wavFile))) {
-    time <- strptime(paste0(gsub("([0-9]{8}).*", "\\1", basename(wavFile)), gsub(".*T([0-9]{6})\\+.*", "\\1", basename(wavFile))), "%Y%m%d%H%M%S")
-  } else if (grepl("^[0-9]{8}_[0-9]{6}_", basename(wavFile))) {
-    time <- strptime(paste0(gsub("([0-9]{8}).*", "\\1", basename(wavFile)), gsub(".*_([0-9]{6})_.*", "\\1", basename(wavFile))), "%Y%m%d%H%M%S")
+    time <- strptime(paste0(gsub(".*([0-9]{8}).*", "\\1", basename(wavFile)), gsub(".*T([0-9]{6})\\+.*", "\\1", basename(wavFile))), "%Y%m%d%H%M%S")
+  } else if (grepl(".*[0-9]{8}_[0-9]{6}_", basename(wavFile))) {
+    time <- strptime(paste0(gsub(".*([0-9]{8}).*", "\\1", basename(wavFile)), gsub(".*_([0-9]{6})_.*", "\\1", basename(wavFile))), "%Y%m%d%H%M%S")
   } else {
     print(paste0("Unrecognised file name format - Skipping file: ", wavFile))
     next
