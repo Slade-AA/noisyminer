@@ -32,7 +32,7 @@ for (wavFile in wavFiles) {
   wavDuration <- floor((wavHeader$samples/wavHeader$sample.rate)/60)
   
   #calculate site, date, and time once per file
-  site <- gsub(".*NoisyMiner_Recordings/(.{3})/.*", "\\1", wavFile)
+  site <- gsub(".*NoisyMiner_Recordings/([0-9A-Z]{2,3})/.*", "\\1", wavFile)
   date <- as.POSIXct(gsub(".*([0-9]{8}).*", "\\1", basename(wavFile)), format = "%Y%m%d") #extract date of recording from filename
   
   #extract time from filename - multiple file naming conventions are in use in this dataset!
