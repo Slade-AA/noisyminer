@@ -21,8 +21,8 @@ for (file in summaryIndicesFiles) {
   
   #Fix incorrect site names for previously run code
   #First batch of generated indices assigned incorrect site names to folders with a length 2 identifier (e.g., Y1, G2 etc.)
-  if (nchar(tmp$Site[1]) > 3) {
-    tmp$Site <- gsub(".*NoisyMiner_Recordings/([0-9A-Z]{2,3})/.*", "\\1", tmp$Site)
+  if (nchar(tmp$Site[1]) > 4) {
+    tmp$Site <- gsub(".*NoisyMiner_Recordings/([0-9A-Z]{2,4})/.*", "\\1", tmp$Site)
   }
   
   summaryIndices[[paste0(tmp$Site[1], "_", tmp$Time[1])]] <- tmp
@@ -35,4 +35,4 @@ summaryIndices <- do.call(rbind, summaryIndices)
 #check random sample of date, time, filename to make sure all okay
 #summaryIndices[sample(nrow(summaryIndices), 10),1:4]
 
-saveRDS(object = summaryIndices, file = "outputs/summaryIndices.RDS")
+saveRDS(object = summaryIndices, file = "outputs/indices/summaryIndices.RDS")
