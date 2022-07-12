@@ -57,5 +57,9 @@ for (index in indices) {
 
 combined <- merge(get(indices[1]), get(indices[2]))
 
+combined <- combined %>% mutate(Date = as.character(as.POSIXct(gsub("^([0-9\\-]{10}).*", "\\1", DATETIME), format = "%Y-%m-%d")))
+
+
+
 # Save output ----
 saveRDS(object = combined, file = paste0("outputs/indices/spectralIndices_AP_", paste(indices, collapse = "_"), ".RDS"))

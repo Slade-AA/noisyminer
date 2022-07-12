@@ -1,9 +1,48 @@
+#Calculate spearman correlation values for each acoustic index
+
+# Load packages ----
+
+library(tidyverse)
+
+# Load indices and biodiversity data ----
+
+# ├ richness ----
+
 richness_abundance <- read.csv("rawdata/SummarySurveyData2019_2021.csv")
+
+richness_abundance <- richness_abundance[complete.cases(richness_abundance),] #remove any NA rows
+richness_abundance$SurveyID <- gsub(" ", "", richness_abundance$SurveyID) #remove spaces from SurveyID
+richness_abundance$SiteID <- gsub(" ", "", richness_abundance$SiteID) #remove spaces from SiteID
 
 richness_abundance <- richness_abundance %>% 
   rename(Site = SiteID) %>% 
   mutate(Date = as.character(as.Date(Date, "%d/%m/%Y")),
          Site = as.character(Site))
+
+#richness data frame has some duplicates (127, 129, 6 look to be errors)
+richness_abundance_dups <- richness_abundance[richness_abundance$SurveyID %in% richness_abundance$SurveyID[which(duplicated(richness_abundance$SurveyID))],]
+
+richness_abundance <- richness_abundance[-c(127, 129, 6),] #remove incorrect duplicates
+
+#extract 'season', 'seasonYear' and 'replicate' from 'SurveyID'
+richness_abundance <- richness_abundance %>% mutate(season = gsub("^[A-Z]{1,2}[0-9]{1,2}([A-Za-z]{6})[0-9]{5}", "\\1", SurveyID),
+                                                    seasonYear = gsub("^[A-Z]{1,2}[0-9]{1,2}([A-Za-z]{6}[0-9]{4})[0-9]{1}", "\\1", SurveyID),
+                                                    replicate = gsub("^[A-Z]{1,2}[0-9]{1,2}[A-Za-z]{6}[0-9]{4}", "", SurveyID))
+
+
+# ├ acoustic indices ----
+
+files <- file.info(list.files("./outputs/data/", pattern = ".*_acousticIndices_summary.RData$", full.names = TRUE)) #list files
+latestFile <- rownames(files)[which.max(files$mtime)] #determine most recent file to use for loading
+
+load(latestFile)
+
+
+# Merge indices and biodiversity data ----
+
+testMerge <- left_join(x = acousticIndices_summary, richness_abundance)
+
+
 
 acousticIndices_day <- acousticIndices_day %>% 
   mutate(Date = as.character(Date))

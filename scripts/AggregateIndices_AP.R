@@ -41,6 +41,8 @@ tictoc::toc()
 
 summaryIndices <- do.call(rbind, summaryIndices)
 
+summaryIndices <- summaryIndices %>% mutate(Date = as.character(as.POSIXct(gsub("^([0-9\\-]{10}).*", "\\1", DATETIME), format = "%Y-%m-%d")))
+
 
 # Save output ----
 saveRDS(object = summaryIndices, file = "outputs/indices/summaryIndices_AP.RDS")

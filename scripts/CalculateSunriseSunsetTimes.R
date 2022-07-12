@@ -17,8 +17,9 @@ GPS_Site_AllDays <- full_join(GPS_Site, dates)
 
 # Extract sunrise and sunset times ----
 
-Site_suntimes <- getSunlightTimes(data = GPS_Site_AllDays)
+Site_suntimes <- getSunlightTimes(data = GPS_Site_AllDays,
+                                  tz = "Australia/Sydney")
 
 Site_suntimes <- full_join(GPS_Site_AllDays, Site_suntimes)
 
-write.csv(Site_suntimes, "outputs/Site_suntimes.csv", row.names = F, quote = F)
+saveRDS(Site_suntimes, "outputs/Site_suntimes.RDS")

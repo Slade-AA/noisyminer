@@ -35,4 +35,4 @@ summaryIndices <- do.call(rbind, summaryIndices)
 #check random sample of date, time, filename to make sure all okay
 #summaryIndices[sample(nrow(summaryIndices), 10),1:4]
 
-saveRDS(object = summaryIndices, file = "outputs/indices/summaryIndices.RDS")
+saveRDS(object = summaryIndices, file = "outputs/indices/summaryIndices_R.RDS")
