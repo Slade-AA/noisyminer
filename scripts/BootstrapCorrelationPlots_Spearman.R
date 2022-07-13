@@ -3,6 +3,7 @@
 # Load packages ----
 
 library(tidyverse)
+library(cowplot)
 
 # Load indices and biodiversity data ----
 
@@ -40,16 +41,10 @@ load(latestFile)
 
 # Merge indices and biodiversity data ----
 
-testMerge <- left_join(x = acousticIndices_summary, richness_abundance)
+acousticIndices_richness  <- left_join(x = acousticIndices_summary, richness_abundance)
+acousticIndices_richness <- acousticIndices_richness[complete.cases(acousticIndices_richness),] #remove any NA rows
 
-
-
-acousticIndices_day <- acousticIndices_day %>% 
-  mutate(Date = as.character(Date))
-
-testMerge <- left_join(x = acousticIndices_day, richness_abundance, by.x = c("Site", "Date"), by.y = c("SiteID", "Date"))
-
-testMerge <- merge(x = acousticIndices_day, richness_abundance, by = c("Site", "Date"))
+acousticIndices_richness <- acousticIndices_richness %>% filter(p > 0.7) #remove datapoints where less than 70% of audio was available
 
 
 
@@ -60,22 +55,25 @@ library(boot)
 bootCor_results <- list()
 
 for (measure in c('Total20m', 'Total40m', 'Diversity20m', 'Diversity40m', 'NumberNoisyMiner')) {
-  
-  for (index in colnames(select(testMerge, ends_with(c("mean"))))) {
-    set.seed(1234)#set seed for reproducibility
-    bootResults <- boot(testMerge, 
-                        statistic = function(data, i) {
-                          cor(data[i, measure], data[i, index], method='spearman')
-                        },
-                        R = 1000)
-    bootResultsCI <- boot.ci(bootResults, 
-                             conf = 0.95, type = "bca")
+  for (timeperiod in unique(acousticIndices_richness$type)) {
     
-    bootCor_results[[paste(measure, index, sep = "_")]] <- data.frame(Index = gsub("_mean", "", index),
-                                                                      Measure = measure,
-                                                                      Mean = mean(bootResults$t),
-                                                                      Low = bootResultsCI$bca[4],
-                                                                      High = bootResultsCI$bca[5])
+    for (index in colnames(select(acousticIndices_richness, ends_with(c("mean"))))) {
+      set.seed(1234)#set seed for reproducibility
+      bootResults <- boot(acousticIndices_richness[acousticIndices_richness$type == timeperiod,], 
+                          statistic = function(data, i) {
+                            cor(data[i, measure], data[i, index], method='spearman')
+                          },
+                          R = 1000)
+      bootResultsCI <- boot.ci(bootResults, 
+                               conf = 0.95, type = "bca")
+      
+      bootCor_results[[paste(measure, timeperiod, index, sep = "_")]] <- data.frame(Index = gsub("_mean", "", index),
+                                                                                    Time = timeperiod,
+                                                                                    Measure = measure,
+                                                                                    Mean = mean(bootResults$t),
+                                                                                    Low = bootResultsCI$bca[4],
+                                                                                    High = bootResultsCI$bca[5])
+    }
   }
 }
 
@@ -85,19 +83,32 @@ bootCor_results <- do.call(rbind, bootCor_results)
 
 correlationPlots <- list()
 for (measure in c('Total20m', 'Total40m', 'Diversity20m', 'Diversity40m', 'NumberNoisyMiner')) {
-  tmp_data <- bootCor_results[bootCor_results$Measure == measure & 
-                                bootCor_results$Index %in% indicesToUse,]
+  tmp_data <- bootCor_results[bootCor_results$Measure == measure,]# & 
+                                #bootCor_results$Index %in% indicesToUse,]
   #tmp_data$Index <- fct_relevel(tmp_data$Index, indicesToUse)
   
-  correlationPlots[[measure]] <- ggplot(data = tmp_data, aes(x = Mean, y = Index)) +
+  correlationPlots[[measure]] <- ggplot(data = tmp_data, aes(x = Mean, y = Index, group = Time, colour = Time)) +
     geom_vline(xintercept = 0, linetype = 'dashed') +
     geom_pointrange(aes(xmin = Low, xmax = High), position = position_dodge(width = 0.4)) +
     #geom_hline(yintercept = 1+0.5, linetype = "dotted") +
     #geom_hline(yintercept = 4+0.5, linetype = "dotted") +
     scale_x_continuous(limits = c(-0.9, 0.9), breaks = seq(-0.8, 0.8, 0.4)) +
-    #scale_color_viridis_d() +
+    scale_color_viridis_d() +
     labs(x = "Mean correlation") +
     theme_classic() +
     theme(axis.title = element_blank(),
           legend.position = "none")
 }
+
+legend_bottom <- get_legend(
+  correlationPlots[['Total20m']] + 
+    guides(color = guide_legend(nrow = 1)) +
+    theme(legend.position = "bottom", legend.direction = "horizontal", legend.title = element_blank())
+)
+
+
+plot_grid(correlationPlots$Total20m, correlationPlots$Total40m,
+          correlationPlots$Diversity20m, correlationPlots$Diversity40m,
+          ncol = 2, nrow = 2,
+          labels = c("A - Total 20m", "B - Total 40m",
+                     "C - Diversity 20m", "D - Diversity 40m"))
