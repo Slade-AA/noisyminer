@@ -5,11 +5,20 @@ library(seewave)
 library(foreach)
 library(doParallel)
 
-wavFiles <- c(list.files(path = "E:/NoisyMiner_Recordings/Y3", pattern = "*.wav", recursive = TRUE, full.names = TRUE))
+wavFiles <- c(list.files(path = "S:/JCU/NoisyMiner_Recordings/RC6", pattern = "*.wav", recursive = TRUE, full.names = TRUE),
+              list.files(path = "S:/JCU/NoisyMiner_Recordings/BN5", pattern = "*.wav", recursive = TRUE, full.names = TRUE),
+              list.files(path = "S:/JCU/NoisyMiner_Recordings/BN6", pattern = "*.wav", recursive = TRUE, full.names = TRUE),
+              list.files(path = "S:/JCU/NoisyMiner_Recordings/BS5", pattern = "*.wav", recursive = TRUE, full.names = TRUE),
+              list.files(path = "S:/JCU/NoisyMiner_Recordings/BS6", pattern = "*.wav", recursive = TRUE, full.names = TRUE),
+              list.files(path = "S:/JCU/NoisyMiner_Recordings/BS7", pattern = "*.wav", recursive = TRUE, full.names = TRUE),
+              list.files(path = "S:/JCU/NoisyMiner_Recordings/BS8", pattern = "*.wav", recursive = TRUE, full.names = TRUE),
+              list.files(path = "S:/JCU/NoisyMiner_Recordings/BS9", pattern = "*.wav", recursive = TRUE, full.names = TRUE),
+              list.files(path = "S:/JCU/NoisyMiner_Recordings/BS10", pattern = "*.wav", recursive = TRUE, full.names = TRUE),
+              list.files(path = "S:/JCU/NoisyMiner_Recordings/Y4", pattern = "*.wav", recursive = TRUE, full.names = TRUE))
 
 #check if indices have already been calculated for any of these files
 originalLength <- length(wavFiles)
-wavFiles <- wavFiles[!file.exists(paste0(gsub("NoisyMiner_Recordings", "NoisyMiner_Indices", dirname(wavFiles)), "/", gsub(".wav", ".RDS", basename(wavFiles))))]
+wavFiles <- wavFiles[!file.exists(paste0(gsub("NoisyMiner_Recordings", "NoisyMiner_Indices_R", dirname(wavFiles)), "/", gsub(".wav", ".RDS", basename(wavFiles))))]
 if (originalLength != length(wavFiles)) {
   print(paste0(originalLength - length(wavFiles), " recordings have already had indices generated. Generating indices for ", length(wavFiles), " new files."))
 }
@@ -20,8 +29,15 @@ registerDoParallel(numCores)
 
 time0 <- Sys.time()
 
+# Start of analysis loop - iterate through each file
+loop.times <- c()
+
 #recordings <- list()
 for (wavFile in wavFiles) {
+  start.time <- Sys.time()
+  # print progress
+  cat('\n','Processing recording', which(wavFiles == wavFile), 'of', length(wavFiles),'\n')
+  
   
   try({wavHeader <- readWave(wavFile, header = TRUE)})
   if (exists("wavHeader") == FALSE) {
@@ -88,10 +104,19 @@ for (wavFile in wavFiles) {
     return(indices)
   }
   results <- do.call(rbind, results)
-  dir.create(path = gsub("NoisyMiner_Recordings", "NoisyMiner_Indices", dirname(wavFile)), recursive = TRUE, showWarnings = FALSE)
-  saveRDS(results, paste0(gsub("NoisyMiner_Recordings", "NoisyMiner_Indices", dirname(wavFile)), "/", gsub(".wav", ".RDS", basename(wavFile))))
+  dir.create(path = gsub("NoisyMiner_Recordings", "NoisyMiner_Indices_R", dirname(wavFile)), recursive = TRUE, showWarnings = FALSE)
+  saveRDS(results, paste0(gsub("NoisyMiner_Recordings", "NoisyMiner_Indices_R", dirname(wavFile)), "/", gsub(".wav", ".RDS", basename(wavFile))))
   
   remove(wavHeader, wavDuration, site, date, time, results)
+  
+  end.time <- Sys.time()
+  
+  loop.time <- as.numeric(difftime(end.time, start.time, unit = "secs"))
+  
+  loop.times <- append(loop.times, loop.time)
+  
+  current_progress <- paste0("Estimated time remaining: ", round(mean(loop.times)*(length(wavFiles)-which(wavFiles == wavFile))/60, 1), " minutes (", round(mean(loop.times), 1), " secs per recording)")
+  cat("\r", current_progress)
 }
 time1 <- Sys.time()
 time1 - time0
