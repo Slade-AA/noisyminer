@@ -24,7 +24,9 @@ RIndices <- c('ACI_soundecology',
               'Ht',
               'Hf',
               'BI',
-              'BI_chur')
+              'BI_chur',
+              'ACI_chur',
+              'ACI_notchur')
 
 APIndices <- c('Activity',
                'EventsPerSecond', 
@@ -47,7 +49,10 @@ APSpectralIndices <- colnames(spectralIndices_AP[5:(ncol(spectralIndices_AP)-1)]
 
 # Combine indices ----
 
-combinedIndices <- full_join(summaryIndices_AP, spectralIndices_AP)
+combinedIndices_AP <- full_join(summaryIndices_AP, spectralIndices_AP)
+
+#include R indices?
+combinedIndices <- summaryIndices_R %>% mutate(Date = as.character(Date)) %>% left_join(combinedIndices_AP)
 
 # Load suntimes and join with indices ----
 
@@ -67,7 +72,7 @@ acousticIndices_dawnchorus <- combinedIndices %>%
   group_by(Site, Date) %>% 
   mutate(n = n(), p = n()/180) %>%
   group_by(Site, Date, n, p) %>% 
-  summarise_at(vars(all_of(APIndices), all_of(APSpectralIndices)), 
+  summarise_at(vars(all_of(APIndices), all_of(APSpectralIndices), all_of(RIndices)), 
                list(mean = mean, median = median, iqr = IQR, sd = sd))
 
 # ├ Summarise day (sunrise to sunset) ----
@@ -77,7 +82,7 @@ acousticIndices_day <- combinedIndices %>%
   group_by(Site, Date) %>% 
   mutate(n = n(), p = n()/(period_to_seconds(hm(gsub("[0-9]{4}\\-[0-9]{2}\\-[0-9]{2} ([0-9\\:]{5})\\:[0-9]{2}$","\\1",sunset)) - hm(gsub("[0-9]{4}\\-[0-9]{2}\\-[0-9]{2} ([0-9\\:]{5})\\:[0-9]{2}$","\\1",sunrise)))/60)) %>% 
   group_by(Site, Date, n, p) %>% 
-  summarise_at(vars(all_of(APIndices), all_of(APSpectralIndices)), 
+  summarise_at(vars(all_of(APIndices), all_of(APSpectralIndices), all_of(RIndices)), 
                list(mean = mean, median = median, iqr = IQR, sd = sd))
 
 # ├ Summarise evening chorus (sunset - 3 hours) ----
@@ -87,7 +92,7 @@ acousticIndices_eveningchorus <- combinedIndices %>%
   group_by(Site, Date) %>% 
   mutate(n = n(), p = n()/180) %>% 
   group_by(Site, Date, n, p) %>% 
-  summarise_at(vars(all_of(APIndices), all_of(APSpectralIndices)), 
+  summarise_at(vars(all_of(APIndices), all_of(APSpectralIndices), all_of(RIndices)), 
                list(mean = mean, median = median, iqr = IQR, sd = sd))
 
 # ├ Summarise solarNoon (solarNoon +- 1.5 hours) ----
@@ -97,7 +102,7 @@ acousticIndices_solarNoon <- combinedIndices %>%
   group_by(Site, Date) %>% 
   mutate(n = n(), p = n()/180) %>% 
   group_by(Site, Date, n, p) %>% 
-  summarise_at(vars(all_of(APIndices), all_of(APSpectralIndices)), 
+  summarise_at(vars(all_of(APIndices), all_of(APSpectralIndices), all_of(RIndices)), 
                list(mean = mean, median = median, iqr = IQR, sd = sd))
 
 # Bind in single data frame and save ----

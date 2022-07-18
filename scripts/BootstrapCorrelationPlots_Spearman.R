@@ -62,7 +62,24 @@ axisLabels <- c("Activity" = "ACT",
                 "Ndsi" = "NDSI", 
                 "SptDensity" = "SPD")
 
+extraLabels <- c('ACI_soundecology' = "ACI_SE",
+                 'ADI' = "ADI",
+                 'AE' = "AE",
+                 'NDSI_soundecology' = "NDSI_SE",
+                 'NDSI_bio' = "NDSI_bio",
+                 'NDSI_anthro' = "NDSI_anthro",
+                 'M' = "M",
+                 'H' = "H",
+                 'Ht' = "Ht",
+                 'Hf' = "Hf",
+                 'BI' = "BI",
+                 'BI_chur' = "BI_chur",
+                 'ACI_chur',
+                 'ACI_notchur')
+
 # ├ Total count and Diversity ----
+
+# ├├ AP Acoustic Indices ----
 correlationPlots_total_diversity <- list()
 for (measure in c('Total20m', 'Total40m', 'Diversity20m', 'Diversity40m')) {
   tmp_data <- bootCor_results[bootCor_results$Measure == measure & 
@@ -98,5 +115,9 @@ correlationPlot_total_diversity <- plot_grid(plotlist = correlationPlots_total_d
 ggsave("outputs/figures/bootstrapcorrelations/correlationPlot_total_diversity_spearman.png",
        correlationPlot_total_diversity,
        width = 24, height = 24, units = "cm", dpi = 800)
+
+# ├├ R Acoustic Indices ----
+
+
 
 # ├ Number of Noisy miner ----
