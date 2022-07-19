@@ -49,7 +49,7 @@ acousticIndices_richness <- acousticIndices_richness %>% filter(p > 0.7) #remove
 acousticIndices_richness <- acousticIndices_richness %>% mutate(NoisyPreAbs = as_factor(case_when(
   NumberNoisyMiner > 0 ~ 1,
   NumberNoisyMiner == 0 ~ 0
-)))
+)), .after = "NumberNoisyMiner")
 
 # Combine replicates ----
 

@@ -7,7 +7,7 @@ library(lubridate)
 
 # Read in indices ----
 
-summaryIndicesFiles <- list.files(path = "E:/NoisyMiner_Indices",
+summaryIndicesFiles <- list.files(path = "E:/NoisyMiner_Indices_R",
                                   pattern = "*.RDS",
                                   recursive = TRUE,
                                   full.names = TRUE)
@@ -26,8 +26,12 @@ for (file in summaryIndicesFiles) {
   }
   
   #extract ACI values for specific frequency ranges (14:43 = ~ 1111.04656 - 3675.00016Hz)
-  tmp$ACI_chur <- as.numeric(lapply(tmp$ACI_soundecology_f, function(x) sum(x[14:43])))
-  tmp$ACI_notchur <- tmp$ACI_soundecology - tmp$ACI_chur
+  tmp <- add_column(tmp, 
+                    ACI_chur = as.numeric(lapply(tmp$ACI_soundecology_f, function(x) sum(x[14:43]))),
+                    .after = "ACI_soundecology_f")
+  tmp <- add_column(tmp, 
+                    ACI_notchur = tmp$ACI_soundecology - tmp$ACI_chur,
+                    .after = "ACI_chur")
   
   summaryIndices[[paste0(tmp$Site[1], "_", tmp$Time[1])]] <- tmp
   

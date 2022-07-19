@@ -11,9 +11,18 @@ summaryIndices_R <- readRDS("outputs/indices/summaryIndices_R.RDS") #Haven't bee
 summaryIndices_AP <- readRDS("outputs/indices/summaryIndices_AP.RDS")
 spectralIndices_AP <- readRDS("outputs/indices/spectralIndices_AP_CVR_ENT.RDS")
 
+# Fix timezones of datetime columns ----
+#use 'force_tz' to change the timezone without changing the actual time - the actual clock time should be correct
+
+summaryIndices_R <- summaryIndices_R %>% mutate(DATETIME = force_tz(Time, tz = "Australia/Sydney"), .after = "Date") %>% select(-Time)
+summaryIndices_AP <- summaryIndices_AP %>% mutate(DATETIME = force_tz(DATETIME, tz = "Australia/Sydney"))
+spectralIndices_AP <- spectralIndices_AP %>% mutate(DATETIME = force_tz(DATETIME, tz = "Australia/Sydney"))
+
 # Specify acoustic indices ----
 
 RIndices <- c('ACI_soundecology',
+              'ACI_chur',
+              'ACI_notchur',
               'ADI',
               'AE',
               'NDSI_soundecology',
@@ -24,9 +33,7 @@ RIndices <- c('ACI_soundecology',
               'Ht',
               'Hf',
               'BI',
-              'BI_chur',
-              'ACI_chur',
-              'ACI_notchur')
+              'BI_chur')
 
 APIndices <- c('Activity',
                'EventsPerSecond', 
@@ -51,8 +58,10 @@ APSpectralIndices <- colnames(spectralIndices_AP[5:(ncol(spectralIndices_AP)-1)]
 
 combinedIndices_AP <- full_join(summaryIndices_AP, spectralIndices_AP)
 
-#include R indices?
-combinedIndices <- summaryIndices_R %>% mutate(Date = as.character(Date)) %>% left_join(combinedIndices_AP)
+#include R indices
+combinedIndices <- summaryIndices_R %>% 
+  mutate(Date = as.character(Date)) %>% 
+  left_join(combinedIndices_AP)
 
 # Load suntimes and join with indices ----
 
@@ -63,7 +72,7 @@ combinedIndices <- left_join(combinedIndices, suntimes)
 
 # Summarise indices by time periods ----
 
-#should dawn chorus be sunrise +- 1 hour?
+#should dawn chorus be sunrise +- 1 hour (1.5hr)?
 
 # ├ Summarise dawn chorus (sunrise + 3 hours) ----
 acousticIndices_dawnchorus <- combinedIndices %>% 
