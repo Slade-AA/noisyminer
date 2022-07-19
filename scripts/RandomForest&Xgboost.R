@@ -244,12 +244,12 @@ ggsave(filename = paste0("outputs/figures/modelperformance/rf_temporal.png"),
 # ├├ Fit xgboost model ----
 
 control_xgb <- trainControl(method = "repeatedcv", number = 10, repeats = 1, verbose = FALSE, savePredictions = TRUE, allowParallel = TRUE)
-tunegrid_xgb <- expand.grid(nrounds = 50, #500 seq(200,600,100)
-                            eta = c(0.025, 0.05), #learning rate #c(0.01, 0.025, 0.05)
-                            max_depth = seq(5,5), #maximum depth of tree #c(4,5,6,7)
+tunegrid_xgb <- expand.grid(nrounds = seq(200,600,100), #500 
+                            eta = c(0.01, 0.025, 0.05), #learning rate #
+                            max_depth = c(4,5,6,7), #maximum depth of tree #
                             gamma = 0,
-                            colsample_bytree = 1, #fraction of columns to randomly sample for each tree #c(0.7,0.8)
-                            min_child_weight = 1, #c(0.7,0.8)
+                            colsample_bytree = c(0.7,0.8), #fraction of columns to randomly sample for each tree #
+                            min_child_weight = c(0.7,0.8), #
                             subsample = 1) #fraction of observations to randomly sample for each tree
 
 xgboostOutputs_spatial <- list()
@@ -338,7 +338,7 @@ Plot_ModelPerformance_xgb_spatial <- plot_grid(Plot_ModelPerformance_xgb_spatial
 
 ggsave(filename = paste0("outputs/figures/modelperformance/xgboost_spatial.png"),
        Plot_ModelPerformance_xgb_spatial,
-       width = 18, height = 18, units = "cm", dpi = 800)
+       width = 24, height = 24, units = "cm", dpi = 800)
 
 #Scatterplots of test set observed vs predicted values
 AllPredictions_xgb_spatial <- lapply(xgboostOutputs_spatial, function(x) x[['predictions']]) %>% lapply(function(x) x %>% rename(obs = 1)) %>%  
