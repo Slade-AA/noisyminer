@@ -244,18 +244,21 @@ ggsave(filename = paste0("outputs/figures/modelperformance/rf_temporal.png"),
 # ├├ Fit xgboost model ----
 
 control_xgb <- trainControl(method = "repeatedcv", number = 10, repeats = 1, verbose = FALSE, savePredictions = TRUE, allowParallel = TRUE)
-tunegrid_xgb <- expand.grid(nrounds = 50,
-                            eta = c(0.025, 0.05),#, 0.1, 0.3),
-                            max_depth = seq(5,5),
+tunegrid_xgb <- expand.grid(nrounds = 50, #500 seq(200,600,100)
+                            eta = c(0.025, 0.05), #learning rate #c(0.01, 0.025, 0.05)
+                            max_depth = seq(5,5), #maximum depth of tree #c(4,5,6,7)
                             gamma = 0,
-                            colsample_bytree = 1,
-                            min_child_weight = 1,
-                            subsample = 1)
+                            colsample_bytree = 1, #fraction of columns to randomly sample for each tree #c(0.7,0.8)
+                            min_child_weight = 1, #c(0.7,0.8)
+                            subsample = 1) #fraction of observations to randomly sample for each tree
 
 xgboostOutputs_spatial <- list()
+
+pb = txtProgressBar(min = 0, max = length(unique(acousticIndices_richness$Region)) * length(c('dawnChorus', 'solarNoon', 'eveningChorus', 'day')), initial = 0, style = 3); k <- 0
+
 for (region in unique(acousticIndices_richness$Region)) {
   
-  for (timeDay in c('dawnChorus')) { #, 'solarNoon', 'eveningChorus', 'day'
+  for (timeDay in c('dawnChorus', 'solarNoon', 'eveningChorus', 'day')) { #, 'solarNoon', 'eveningChorus', 'day'
     trainData <- acousticIndices_richness[acousticIndices_richness$Region != region & acousticIndices_richness$type == timeDay,]
     testData <- acousticIndices_richness[acousticIndices_richness$Region == region & acousticIndices_richness$type == timeDay,]
     
@@ -294,11 +297,14 @@ for (region in unique(acousticIndices_richness$Region)) {
                           outputs <- list(fit = fit,
                                           predictions = predictions,
                                           performance = performance)
+                          
                           outputs
                         }
     stopCluster(cl)
     
     xgboostOutputs_spatial <- c(xgboostOutputs_spatial, results)
+    
+    k <- k+1; setTxtProgressBar(pb, k) #update progress bar
   }
 }
 
@@ -310,10 +316,10 @@ AllPerformance_xgb_spatial <- lapply(xgboostOutputs_spatial, function(x) x[['per
                                                                                                                                          Model = "xgboost",
                                                                                                                                          Region = gsub(".*_[A-Za-z]*_([A-Z]{1,2})", "\\1", Iteration))
 
-Plot_ModelPerformance_xgb_spatial <- ggplot(data = AllPerformance_xgb_spatial[AllPerformance_xgb$.metric %in% c('mae', 'rmse', 'norm_mae', 'norm_rmse'),], 
+Plot_ModelPerformance_xgb_spatial <- ggplot(data = AllPerformance_xgb_spatial[AllPerformance_xgb_spatial$.metric %in% c('mae', 'rmse', 'norm_mae', 'norm_rmse'),], 
                                             aes(x = Measure, y = .estimate, fill = TimePeriod)) +
   geom_boxplot(outlier.shape = NA) +
-  geom_point(position = position_jitterdodge()) +
+  geom_point(position = position_jitterdodge(jitter.width = .10)) +
   scale_fill_viridis_d() +
   facet_wrap(~factor(.metric, levels = c('mae', 'rmse', 'norm_mae', 'norm_rmse')), scales = "free") +
   labs(x = "Biodiversity Measure", y = "Performance Estimate") +
@@ -344,35 +350,36 @@ AllPredictions_xgb_spatial <- lapply(xgboostOutputs_spatial, function(x) x[['pre
 
 Plots_Observed_Predicted_xgb_spatial <- list()
 for (measure in unique(AllPredictions_xgb_spatial$Measure)) {
-  CCClabels <- AllPredictions_xgb_spatial %>% group_by(Region) %>% summarise(CCC = round(DescTools::CCC(.pred[Measure == measure],obs[Measure == measure])$rho.c$est, 2))
-  
-  Plots_Observed_Predicted_xgb_spatial[[measure]] <- ggplot(data = AllPredictions_xgb_spatial[AllPredictions__xgb$Measure == measure,],
-                                                            aes(x = .pred, y = obs)) +
-    geom_point() +
-    geom_abline(slope = 1, linetype = 'dashed') +
-    scale_x_continuous(limits = c(min(AllPredictions_xgb_spatial[AllPredictions_xgb_spatial$Measure == measure,c(2:3)]), 
-                                  max(AllPredictions_xgb_spatial[AllPredictions_xgb_spatial$Measure == measure,c(2:3)]))) +
-    scale_y_continuous(limits = c(min(AllPredictions_xgb_spatial[AllPredictions_xgb_spatial$Measure == measure,c(2:3)]), 
-                                  max(AllPredictions_xgb_spatial[AllPredictions_xgb_spatial$Measure == measure,c(2:3)]))) +
-    geom_text(data = CCClabels, aes(x = 0.8*(max(AllPredictions_xgb_spatial[AllPredictions_xgb_spatial$Measure == measure,c(2:3)]) -
-                                                                   min(AllPredictions_xgb_spatial[AllPredictions_xgb_spatial$Measure == measure,c(2:3)])) + 
-                                                          min(AllPredictions_xgb_spatial[AllPredictions_xgb_spatial$Measure == measure,c(2:3)]), 
-                                                        y = min(AllPredictions_xgb_spatial[AllPredictions_xgb_spatial$Measure == measure,c(2:3)])), 
-              label = CCC) +
-    #annotate(geom = "text", 
-    #         x = 0.8*(max(AllPredictions_xgb_spatial[AllPredictions_xgb_spatial$Measure == measure,c(2:3)]) -
-    #                    min(AllPredictions_xgb_spatial[AllPredictions_xgb_spatial$Measure == measure,c(2:3)])) + 
-    #           min(AllPredictions_xgb_spatial[AllPredictions_xgb_spatial$Measure == measure,c(2:3)]), 
-    #         y = min(AllPredictions_xgb_spatial[AllPredictions_xgb_spatial$Measure == measure,c(2:3)]), 
-    #         vjust = 0, size = 3,
-    #         label = paste0("CCC: ", AllPredictions_xgb_spatial %>% group_by(Region) %>% summarise(CCC = DescTools::CCC(.pred[Measure == measure],obs[Measure == measure])$rho.c$est) %>% select(CCC) %>% unlist() %>% as.numeric() %>% round(digits = 2))) +
-    labs(x = "Predicted", y = "Observed") +
-    facet_wrap(~Region) +
-    theme_bw()
-  
-  ggsave(filename = paste0("outputs/figures/observedvspredicted/xgboost_spatial_", measure, ".png"),
-         Plots_Observed_Predicted_xgb_spatial[[measure]],
-         width = 18, height = 18, units = "cm", dpi = 800)
+  for (timeDay in c('dawnChorus', 'solarNoon', 'eveningChorus', 'day')) {
+    
+    tmpdata <- AllPredictions_xgb_spatial %>%
+      filter(TimePeriod == timeDay & Measure == measure)
+    
+    CCClabels <- tmpdata %>% 
+      group_by(Region) %>% 
+      summarise(CCC = round(DescTools::CCC(.pred, obs)$rho.c$est, 2))
+    
+    Plots_Observed_Predicted_xgb_spatial[[paste0(measure, "_", timeDay)]] <- ggplot(data = tmpdata,
+                                                              aes(x = .pred, y = obs)) +
+      geom_point() +
+      geom_abline(slope = 1, linetype = 'dashed') +
+      scale_x_continuous(limits = c(min(tmpdata[,c(2:3)]), 
+                                    max(tmpdata[,c(2:3)]))) +
+      scale_y_continuous(limits = c(min(tmpdata[,c(2:3)]), 
+                                    max(tmpdata[,c(2:3)]))) +
+      geom_text(data = CCClabels, aes(x = 0.8*(max(tmpdata[,c(2:3)]) -
+                                                 min(tmpdata[,c(2:3)])) + 
+                                        min(tmpdata[,c(2:3)]), 
+                                      y = min(tmpdata[,c(2:3)]), 
+                                      label = CCC)) +
+      labs(x = "Predicted", y = "Observed") +
+      facet_wrap(~Region) +
+      theme_bw()
+    
+    ggsave(filename = paste0("outputs/figures/observedvspredicted/xgboost_spatial_", measure, "_", timeDay, ".png"),
+           Plots_Observed_Predicted_xgb_spatial[[paste0(measure, "_", timeDay)]],
+           width = 18, height = 18, units = "cm", dpi = 800) 
+  }
 }
 
 # ├ Temporal cross-validation ----
@@ -388,3 +395,5 @@ for (measure in unique(AllPredictions_xgb_spatial$Measure)) {
 # ├ Temporal ----
 
 
+# Save workspace for later loading ----
+save.image(file = "outputs/workspaces/RandomForest&Xgboost.RData")
