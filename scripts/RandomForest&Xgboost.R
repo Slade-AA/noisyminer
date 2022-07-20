@@ -113,7 +113,7 @@ Plot_ModelPerformance_rf_spatial <- plot_grid(Plot_ModelPerformance_rf_spatial, 
                                       ncol = 1, 
                                       rel_heights = c(1, 0.1))
 
-ggsave(filename = paste0("outputs/figures/modelperformance/rf_spatial.png"),
+ggsave(filename = paste0("outputs/figures/modelperformance_rf&xgboost/rf_spatial.png"),
        Plot_ModelPerformance_rf_spatial,
        width = 18, height = 18, units = "cm", dpi = 800)
 
@@ -138,7 +138,7 @@ for (measure in unique(AllPredictions_rf_spatial$Measure)) {
     facet_wrap(~Region) +
     theme_bw()
   
-  ggsave(filename = paste0("outputs/figures/observedvspredicted/rf_spatial_", measure, ".png"),
+  ggsave(filename = paste0("outputs/figures/observedvspredicted_rf&xgboost/rf_spatial_", measure, ".png"),
          Plots_Observed_Predicted_rf_spatial[[measure]],
          width = 18, height = 18, units = "cm", dpi = 800)
 }
@@ -230,7 +230,7 @@ Plot_ModelPerformance_rf_temporal <- plot_grid(Plot_ModelPerformance_rf_temporal
                                                ncol = 1, 
                                                rel_heights = c(1, 0.1))
 
-ggsave(filename = paste0("outputs/figures/modelperformance/rf_temporal.png"),
+ggsave(filename = paste0("outputs/figures/modelperformance_rf&xgboost/rf_temporal.png"),
        Plot_ModelPerformance_rf_temporal,
        width = 18, height = 18, units = "cm", dpi = 800)
 
@@ -336,7 +336,7 @@ Plot_ModelPerformance_xgb_spatial <- plot_grid(Plot_ModelPerformance_xgb_spatial
                                                ncol = 1, 
                                                rel_heights = c(1, 0.1))
 
-ggsave(filename = paste0("outputs/figures/modelperformance/xgboost_spatial.png"),
+ggsave(filename = paste0("outputs/figures/modelperformance_rf&xgboost/xgboost_spatial.png"),
        Plot_ModelPerformance_xgb_spatial,
        width = 24, height = 24, units = "cm", dpi = 800)
 
@@ -376,7 +376,7 @@ for (measure in unique(AllPredictions_xgb_spatial$Measure)) {
       facet_wrap(~Region) +
       theme_bw()
     
-    ggsave(filename = paste0("outputs/figures/observedvspredicted/xgboost_spatial_", measure, "_", timeDay, ".png"),
+    ggsave(filename = paste0("outputs/figures/observedvspredicted_rf&xgboost/xgboost_spatial_", measure, "_", timeDay, ".png"),
            Plots_Observed_Predicted_xgb_spatial[[paste0(measure, "_", timeDay)]],
            width = 18, height = 18, units = "cm", dpi = 800) 
   }
