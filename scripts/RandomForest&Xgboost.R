@@ -397,3 +397,76 @@ for (measure in unique(AllPredictions_xgb_spatial$Measure)) {
 
 # Save workspace for later loading ----
 save.image(file = "outputs/workspaces/RandomForest&Xgboost.RData")
+
+
+
+
+
+
+
+# xgboost spatial for reps_combined ----
+
+control_xgb_repscombined <- trainControl(method = "repeatedcv", number = 10, repeats = 1, verbose = FALSE, savePredictions = TRUE, allowParallel = TRUE)
+tunegrid_xgb_repscombined <- expand.grid(nrounds = seq(200,600,100), #500 
+                                         eta = c(0.01, 0.025), #learning rate #
+                                         max_depth = c(4,5,6,7), #maximum depth of tree #
+                                         gamma = 0,
+                                         colsample_bytree = c(0.7), #fraction of columns to randomly sample for each tree #
+                                         min_child_weight = c(0.7), #
+                                         subsample = 1) #fraction of observations to randomly sample for each tree
+
+xgboostOutputs_spatial_repscombined <- list()
+
+pb = txtProgressBar(min = 0, max = length(unique(acousticIndices_richness_repscombined$Region)) * length(c('dawnChorus', 'solarNoon', 'eveningChorus', 'day')), initial = 0, style = 3); k <- 0
+
+for (region in unique(acousticIndices_richness_repscombined$Region)) {
+  
+  for (timeDay in c('dawnChorus', 'solarNoon', 'eveningChorus', 'day')) { #, 'solarNoon', 'eveningChorus', 'day'
+    trainData <- acousticIndices_richness_repscombined[acousticIndices_richness_repscombined$Region != region & acousticIndices_richness_repscombined$type == timeDay,]
+    testData <- acousticIndices_richness_repscombined[acousticIndices_richness_repscombined$Region == region & acousticIndices_richness_repscombined$type == timeDay,]
+    
+    cl <- makeCluster(8)
+    registerDoParallel(cl)
+    
+    results <- foreach (measure = c('Total20m', 'Total40m', 'Diversity20m', 'Diversity40m', 'NumberNoisyMiner'), 
+                        .final = function(x) setNames(x, paste(measure = c('Total20m', 'Total40m', 'Diversity20m', 'Diversity40m', 'NumberNoisyMiner'), timeDay, region, sep = "_")),
+                        .packages = c("caret", "xgboost", "tidymodels", "tidyverse", 'permimp'),
+                        .inorder = TRUE) %dopar% {
+                          
+                          #only use noisy miner specific indices in training model for 'NumberNoisyMiner'
+                          if (measure == 'NumberNoisyMiner') {
+                            formula <- as.formula(paste0(measure, " ~ ", paste(colnames(select(acousticIndices_richness_repscombined, ends_with(c("mean")))), collapse = " + ")))
+                          } else {
+                            formula <- as.formula(paste0(measure, " ~ ", paste(grep(paste(noisyMinerIndices, collapse = "|"), colnames(select(acousticIndices_richness_repscombined, ends_with(c("mean")))), invert = TRUE, value = TRUE), collapse = " + ")))
+                          }
+                          
+                          fit <- train(form = formula,
+                                       data = trainData,
+                                       method = "xgbTree",
+                                       trControl = control_xgb_repscombined,
+                                       tuneGrid = tunegrid_xgb_repscombined)
+                          predictions <- bind_cols(testData[measure], .pred = predict(fit, newdata = testData))						  
+                          
+                          performance <- predictions %>% metrics(truth = measure, estimate = .pred)
+                          performance <- data.frame(rbind(performance,
+                                                          data.frame(.metric = 'norm_rmse', 
+                                                                     .estimator = 'custom', 
+                                                                     .estimate = performance$.estimate[performance$.metric == 'rmse']/(max(testData[measure])-min(testData[measure]))),
+                                                          data.frame(.metric = 'norm_mae', 
+                                                                     .estimator = 'custom', 
+                                                                     .estimate = performance$.estimate[performance$.metric == 'mae']/(max(testData[measure])-min(testData[measure])))))
+                          
+                          
+                          outputs <- list(fit = fit,
+                                          predictions = predictions,
+                                          performance = performance)
+                          
+                          outputs
+                        }
+    stopCluster(cl)
+    
+    xgboostOutputs_spatial_repscombined <- c(xgboostOutputs_spatial_repscombined, results)
+    
+    k <- k+1; setTxtProgressBar(pb, k) #update progress bar
+  }
+}

@@ -15,73 +15,83 @@ acousticIndices_richness_repscombined <- readRDS("outputs/data/acousticIndices_r
 
 # ├ All data points ----
 for (measure in c('Total20m', 'Total40m', 'Diversity20m', 'Diversity40m', 'NumberNoisyMiner')) {
-  Scatterplots <- list()
-  for (index in colnames(select(acousticIndices_richness, ends_with(c("mean"))))) {
-    Scatterplots[[index]] <- ggplot(data = acousticIndices_richness[acousticIndices_richness$type == 'dawnChorus',], aes_string(x = measure, y = index)) +
-      geom_point() +
-      theme_bw()
+  for (timeDay in c('dawnChorus', 'solarNoon', 'eveningChorus', 'day')) {
+    Scatterplots <- list()
+    for (index in colnames(select(acousticIndices_richness, ends_with(c("mean"))))) {
+      Scatterplots[[index]] <- ggplot(data = acousticIndices_richness[acousticIndices_richness$type == timeDay,], aes_string(x = measure, y = index)) +
+        geom_point() +
+        theme_bw()
+    }
+    
+    Scatterplot <- plot_grid(plotlist = Scatterplots)
+    
+    ggsave(paste0("outputs/figures/basicplots/scatterplot_", measure, "_", timeDay, ".png"),
+           Scatterplot,
+           width = 24, height = 24, units = "cm", dpi = 800)
   }
-  
-  Scatterplot <- plot_grid(plotlist = Scatterplots)
-  
-  ggsave(paste0("outputs/figures/basicplots/scatterplot_", measure, ".png"),
-         Scatterplot,
-         width = 24, height = 24, units = "cm", dpi = 800)
 }
 
 # ├ Replicates combined ----
 for (measure in c('Total20m', 'Total40m', 'Diversity20m', 'Diversity40m', 'NumberNoisyMiner')) {
-  Scatterplots_repscombined <- list()
-  for (index in colnames(select(acousticIndices_richness_repscombined, ends_with(c("mean"))))) {
-    Scatterplots_repscombined[[index]] <- ggplot(data = acousticIndices_richness_repscombined[acousticIndices_richness_repscombined$type == 'dawnChorus',], aes_string(x = measure, y = index)) +
-      geom_point() +
-      theme_bw()
+  for (timeDay in c('dawnChorus', 'solarNoon', 'eveningChorus', 'day')) {
+    Scatterplots_repscombined <- list()
+    for (index in colnames(select(acousticIndices_richness_repscombined, ends_with(c("mean"))))) {
+      Scatterplots_repscombined[[index]] <- ggplot(data = acousticIndices_richness_repscombined[acousticIndices_richness_repscombined$type == timeDay,], aes_string(x = measure, y = index)) +
+        geom_point() +
+        theme_bw()
+    }
+    
+    Scatterplot_repscombined <- plot_grid(plotlist = Scatterplots_repscombined)
+    
+    ggsave(paste0("outputs/figures/basicplots/scatterplot_", measure, "_", timeDay, "_repscombined.png"),
+           Scatterplot_repscombined,
+           width = 24, height = 24, units = "cm", dpi = 800)
   }
-  
-  Scatterplot_repscombined <- plot_grid(plotlist = Scatterplots_repscombined)
-  
-  ggsave(paste0("outputs/figures/basicplots/scatterplot_", measure, "_repscombined.png"),
-         Scatterplot_repscombined,
-         width = 24, height = 24, units = "cm", dpi = 800)
 }
 
 # Boxplots of acoustic indices and presence-absence noisy miner ----
 
 # ├ All data points ----
-Boxplots_pre_abs <- list()
-for (index in colnames(select(acousticIndices_richness, ends_with(c("mean"))))) {
-  Boxplots_pre_abs[[index]] <- ggplot(data = acousticIndices_richness[acousticIndices_richness$type == 'dawnChorus',], 
-         aes_string(x = "NoisyPreAbs", y = index, fill = "NoisyPreAbs")) +
-    geom_boxplot() +
-    scale_fill_viridis_d() +
-    theme_bw() +
-    theme(legend.position = "none")
+for (timeDay in c('dawnChorus', 'solarNoon', 'eveningChorus', 'day')) {
+  Boxplots_pre_abs <- list()
+  for (index in colnames(select(acousticIndices_richness, ends_with(c("mean"))))) {
+    Boxplots_pre_abs[[index]] <- ggplot(data = acousticIndices_richness[acousticIndices_richness$type == timeDay,], 
+                                        aes_string(x = "NoisyPreAbs", y = index, fill = "NoisyPreAbs")) +
+      geom_boxplot() +
+      scale_fill_viridis_d() +
+      theme_bw() +
+      theme(legend.position = "none")
+    
+    
+  }
+  Boxplot_pre_abs <- plot_grid(plotlist = Boxplots_pre_abs)
   
-  
+  ggsave(paste0("outputs/figures/basicplots/boxplot_pre_abs_", timeDay, ".png"),
+         Boxplot_pre_abs,
+         width = 24, height = 24, units = "cm", dpi = 800)
 }
-Boxplot_pre_abs <- plot_grid(plotlist = Boxplots_pre_abs)
 
-ggsave("outputs/figures/basicplots/boxplot_pre_abs.png",
-       Boxplot_pre_abs,
-       width = 24, height = 24, units = "cm", dpi = 800)
 
 # ├ Replicates combined ----
-Boxplots_pre_abs_repscombined <- list()
-for (index in colnames(select(acousticIndices_richness, ends_with(c("mean"))))) {
-  Boxplots_pre_abs_repscombined[[index]] <- ggplot(data = acousticIndices_richness_repscombined[acousticIndices_richness_repscombined$type == 'dawnChorus',], 
-                                                   aes_string(x = "NoisyPreAbs", y = index, fill = "NoisyPreAbs")) +
-    geom_boxplot() +
-    scale_fill_viridis_d() +
-    theme_bw() +
-    theme(legend.position = "none")
+for (timeDay in c('dawnChorus', 'solarNoon', 'eveningChorus', 'day')) {
+  Boxplots_pre_abs_repscombined <- list()
+  for (index in colnames(select(acousticIndices_richness, ends_with(c("mean"))))) {
+    Boxplots_pre_abs_repscombined[[index]] <- ggplot(data = acousticIndices_richness_repscombined[acousticIndices_richness_repscombined$type == timeDay,], 
+                                                     aes_string(x = "NoisyPreAbs", y = index, fill = "NoisyPreAbs")) +
+      geom_boxplot() +
+      scale_fill_viridis_d() +
+      theme_bw() +
+      theme(legend.position = "none")
+    
+    
+  }
+  Boxplot_pre_abs_repscombined <- plot_grid(plotlist = Boxplots_pre_abs_repscombined)
   
-  
+  ggsave(paste0("outputs/figures/basicplots/boxplot_pre_abs_", timeDay, "_repscombined.png"),
+         Boxplot_pre_abs_repscombined,
+         width = 24, height = 24, units = "cm", dpi = 800)
 }
-Boxplot_pre_abs_repscombined <- plot_grid(plotlist = Boxplots_pre_abs_repscombined)
 
-ggsave("outputs/figures/basicplots/boxplot_pre_abs_repscombined.png",
-       Boxplot_pre_abs_repscombined,
-       width = 24, height = 24, units = "cm", dpi = 800)
 
 # Noisy miner numbers over time ----
 
