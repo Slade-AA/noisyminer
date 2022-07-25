@@ -105,3 +105,54 @@ Plot_Noisyminersovertime <- ggplot(data = acousticIndices_richness[acousticIndic
 ggsave("outputs/figures/basicplots/noisyminersovertime.png",
        Plot_Noisyminersovertime,
        width = 36, height = 24, units = "cm", dpi = 800)
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Boxplots broken up by site and season ----
+
+timeDay <- 'dawnChorus'
+timeDay <- 'solarNoon'
+timeDay <- 'eveningChorus'
+timeDay <- 'day'
+
+Boxplots_pre_abs <- list()
+for (index in colnames(select(acousticIndices_richness, ends_with(c("mean"))))) {
+  Boxplots_pre_abs[[index]] <- ggplot(data = acousticIndices_richness[acousticIndices_richness$type == timeDay,], 
+                                      aes_string(x = "NoisyPreAbs", y = index, fill = "NoisyPreAbs")) +
+    geom_boxplot() +
+    scale_fill_viridis_d() +
+    theme_bw() +
+    theme(legend.position = "none")
+}
+
+Boxplots_pre_abs_Site <- list()
+for (index in colnames(select(acousticIndices_richness, ends_with(c("mean"))))) {
+  Boxplots_pre_abs_Site[[index]] <- ggplot(data = acousticIndices_richness[acousticIndices_richness$type == timeDay,], 
+                                           aes_string(x = "NoisyPreAbs", y = index, fill = "NoisyPreAbs")) +
+    geom_boxplot() +
+    scale_fill_viridis_d() +
+    facet_wrap(~Site) +
+    theme_bw() +
+    theme(legend.position = "none")
+}
+
+Boxplots_pre_abs_Season <- list()
+for (index in colnames(select(acousticIndices_richness, ends_with(c("mean"))))) {
+  Boxplots_pre_abs_Season[[index]] <- ggplot(data = acousticIndices_richness[acousticIndices_richness$type == timeDay,], 
+                                             aes_string(x = "NoisyPreAbs", y = index, fill = "NoisyPreAbs")) +
+    geom_boxplot() +
+    scale_fill_viridis_d() +
+    facet_wrap(~season) +
+    theme_bw() +
+    theme(legend.position = "none")
+}
