@@ -72,14 +72,32 @@ combinedIndices <- left_join(combinedIndices, suntimes)
 
 # Summarise indices by time periods ----
 
-#should dawn chorus be sunrise +- 1 hour (1.5hr)?
-
-# ├ Summarise dawn chorus (sunrise + 3 hours) ----
-acousticIndices_dawnchorus <- combinedIndices %>% 
+# ├ Summarise dawn (30 mins before dawn to 90 mins post dawn) ----
+acousticIndices_dawn <- combinedIndices %>% 
   drop_na() %>% 
-  filter(DATETIME >= sunrise & DATETIME < (sunrise+hms("03:00:00"))) %>% 
+  filter(DATETIME >= (dawn-hms("00:30:00")) & DATETIME < (dawn+hms("01:30:00"))) %>% 
   group_by(Site, Date) %>% 
-  mutate(n = n(), p = n()/180) %>%
+  mutate(n = n(), p = n()/120) %>%
+  group_by(Site, Date, n, p) %>% 
+  summarise_at(vars(all_of(APIndices), all_of(APSpectralIndices), all_of(RIndices)), 
+               list(mean = mean, median = median, iqr = IQR, sd = sd))
+
+# ├ Summarise dusk (90 mins before dusk to 30 mins post dusk) ----
+acousticIndices_dusk <- combinedIndices %>% 
+  drop_na() %>% 
+  filter(DATETIME >= (dusk-hms("01:30:00")) & DATETIME < (dusk+hms("00:30:00"))) %>%
+  group_by(Site, Date) %>% 
+  mutate(n = n(), p = n()/120) %>% 
+  group_by(Site, Date, n, p) %>% 
+  summarise_at(vars(all_of(APIndices), all_of(APSpectralIndices), all_of(RIndices)), 
+               list(mean = mean, median = median, iqr = IQR, sd = sd))
+
+# ├ Summarise solarNoon (solarNoon +- 1 hour) ----
+acousticIndices_solarNoon <- combinedIndices %>% 
+  drop_na() %>% 
+  filter(DATETIME >= (solarNoon-hms("01:00:00")) & DATETIME < (solarNoon+hms("01:00:00"))) %>% 
+  group_by(Site, Date) %>% 
+  mutate(n = n(), p = n()/120) %>% 
   group_by(Site, Date, n, p) %>% 
   summarise_at(vars(all_of(APIndices), all_of(APSpectralIndices), all_of(RIndices)), 
                list(mean = mean, median = median, iqr = IQR, sd = sd))
@@ -94,31 +112,11 @@ acousticIndices_day <- combinedIndices %>%
   summarise_at(vars(all_of(APIndices), all_of(APSpectralIndices), all_of(RIndices)), 
                list(mean = mean, median = median, iqr = IQR, sd = sd))
 
-# ├ Summarise evening chorus (sunset - 3 hours) ----
-acousticIndices_eveningchorus <- combinedIndices %>% 
-  drop_na() %>% 
-  filter(DATETIME >= (sunset-hms("03:00:00")) & DATETIME < sunset) %>%
-  group_by(Site, Date) %>% 
-  mutate(n = n(), p = n()/180) %>% 
-  group_by(Site, Date, n, p) %>% 
-  summarise_at(vars(all_of(APIndices), all_of(APSpectralIndices), all_of(RIndices)), 
-               list(mean = mean, median = median, iqr = IQR, sd = sd))
-
-# ├ Summarise solarNoon (solarNoon +- 1.5 hours) ----
-acousticIndices_solarNoon <- combinedIndices %>% 
-  drop_na() %>% 
-  filter(DATETIME >= (solarNoon-hms("01:30:00")) & DATETIME < (solarNoon+hms("01:30:00"))) %>% 
-  group_by(Site, Date) %>% 
-  mutate(n = n(), p = n()/180) %>% 
-  group_by(Site, Date, n, p) %>% 
-  summarise_at(vars(all_of(APIndices), all_of(APSpectralIndices), all_of(RIndices)), 
-               list(mean = mean, median = median, iqr = IQR, sd = sd))
-
 # Bind in single data frame and save ----
-acousticIndices_summary <- bind_rows(list(dawnChorus = acousticIndices_dawnchorus,
-                                          day = acousticIndices_day,
-                                          eveningChorus = acousticIndices_eveningchorus,
-                                          solarNoon = acousticIndices_solarNoon),
+acousticIndices_summary <- bind_rows(list(dawn = acousticIndices_dawn,
+                                          dusk = acousticIndices_dusk,
+                                          solarNoon = acousticIndices_solarNoon,
+                                          day = acousticIndices_day),
                                      .id = "type") %>% ungroup()
 
 save(acousticIndices_summary, file = paste0("./outputs/data/", Sys.Date(), "_acousticIndices_summary.RData"))
