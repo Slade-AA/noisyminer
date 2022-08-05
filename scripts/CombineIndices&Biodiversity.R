@@ -68,7 +68,7 @@ acousticIndices_biodiversity_R1R2combined <- right_join(SurveyDates, acousticInd
   
 acousticIndices_biodiversity_R1Only <- right_join(SurveyDates, acousticIndices_summary) %>% 
   filter(p >= 0.7 & Repeat == 1) %>%
-  left_join(biodiversity_R1R2combined, by = c("Site" = "SiteID", "Season2" = "Season", "Year" = "Year"))
+  left_join(biodiversity_R1only, by = c("Site" = "SiteID", "Season2" = "Season", "Year" = "Year"))
   
 
 # Combine & Save ----
