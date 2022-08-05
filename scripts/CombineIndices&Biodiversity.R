@@ -43,12 +43,6 @@ load(latestFile)
 
 SurveyDates <- readRDS("outputs/SurveyDates.RDS")
 
-test <- right_join(SurveyDates, acousticIndices_summary)
-#BN5 (2021-02-15), BN6 (2021-02-15), and Y2 (2021-07-28) have both replicates of one season conducted on the same day
-#Current solution is to drop these for R1 and R2 combined analysis
-test <- test %>% filter(!(Site == 'BN5' & Date == '2021-02-15'),
-                        !(Site == 'BN6' & Date == '2021-02-15'),
-                        !(Site == 'Y2' & Date == '2021-07-28'))
 
 # Merge indices and biodiversity data ----
 
