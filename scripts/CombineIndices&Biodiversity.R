@@ -6,29 +6,30 @@ library(tidyverse)
 
 # Load indices and biodiversity data ----
 
-# ├ richness ----
+# ├ biodiversity data ----
 
-richness_abundance <- read.csv("rawdata/SummarySurveyData2019_2021.csv")
+# ├├ Repeats combined ----
 
-richness_abundance <- richness_abundance[complete.cases(richness_abundance),] #remove any NA rows
-richness_abundance$SurveyID <- gsub(" ", "", richness_abundance$SurveyID) #remove spaces from SurveyID
-richness_abundance$SiteID <- gsub(" ", "", richness_abundance$SiteID) #remove spaces from SiteID
+biodiversity_R1R2combined <- read.csv("rawdata/FinalMeanDataAllRepeats.csv")
 
-richness_abundance <- richness_abundance %>% 
-  rename(Site = SiteID) %>% 
-  mutate(Date = as.character(as.Date(Date, "%d/%m/%Y")),
-         Site = as.character(Site))
+#Extract Season and Year from SurveyIDR12 column
+biodiversity_R1R2combined <- biodiversity_R1R2combined %>% mutate(Season = gsub("^[A-Z0-9]{2,4}_([A-Za-z]*)_[0-9]{4}$", "\\1", SurveyIDR12),
+                                                                  Year = gsub(".*_([0-9]{4})$", "\\1", SurveyIDR12),
+                                                                  .after = SiteID)
 
-#richness data frame has some duplicates (127, 129, 6 look to be errors)
-richness_abundance_dups <- richness_abundance[richness_abundance$SurveyID %in% richness_abundance$SurveyID[which(duplicated(richness_abundance$SurveyID))],]
+# ├├ First repeat only ----
 
-richness_abundance <- richness_abundance[-c(127, 129, 6),] #remove incorrect duplicates
+biodiversity_R1only <- read.csv("rawdata/FinalDataR1Only.csv")
 
-#extract 'season', 'seasonYear' and 'replicate' from 'SurveyID'
-richness_abundance <- richness_abundance %>% mutate(season = gsub("^[A-Z]{1,2}[0-9]{1,2}([A-Za-z]{6})[0-9]{5}", "\\1", SurveyID),
-                                                    seasonYear = gsub("^[A-Z]{1,2}[0-9]{1,2}([A-Za-z]{6}[0-9]{4})[0-9]{1}", "\\1", SurveyID),
-                                                    replicate = gsub("^[A-Z]{1,2}[0-9]{1,2}[A-Za-z]{6}[0-9]{4}", "", SurveyID))
+#Extract Season and Year from SurveyIDR12 column
+biodiversity_R1only <- biodiversity_R1only %>% mutate(Season = gsub("^[A-Z0-9]{2,4}_([A-Za-z]*)_[0-9]{4}$", "\\1", SurveyIDR12),
+                                                      Year = gsub(".*_([0-9]{4})$", "\\1", SurveyIDR12),
+                                                      .after = SiteID)
 
+#Provided threshold columns appear to be incorrect - will recalculate here
+biodiversity_R1only <- biodiversity_R1only %>% 
+  mutate(Threshold20m = if_else(TotalMiner20 >= 2.4, 1, 0),
+         Threshold40m = if_else(TotalMiner40 >= 7, 1, 0))
 
 # ├ acoustic indices ----
 
@@ -37,36 +38,48 @@ latestFile <- rownames(files)[which.max(files$mtime)] #determine most recent fil
 
 load(latestFile)
 
+# ├├ Survey Dates data ----
+#Need to join this to acoustic indices in order to join with biodiversity data
+
+SurveyDates <- readRDS("outputs/SurveyDates.RDS")
+
+test <- right_join(SurveyDates, acousticIndices_summary)
+#BN5 (2021-02-15), BN6 (2021-02-15), and Y2 (2021-07-28) have both replicates of one season conducted on the same day
+#Current solution is to drop these for R1 and R2 combined analysis
+test <- test %>% filter(!(Site == 'BN5' & Date == '2021-02-15'),
+                        !(Site == 'BN6' & Date == '2021-02-15'),
+                        !(Site == 'Y2' & Date == '2021-07-28'))
 
 # Merge indices and biodiversity data ----
 
-acousticIndices_richness  <- left_join(x = acousticIndices_summary, richness_abundance)
-acousticIndices_richness <- acousticIndices_richness[complete.cases(acousticIndices_richness),] #remove any NA rows
+# ├ R1R2Combined ----
+#Need to average acoutic indices for both survey days (i.e., repeats 1 and 2)
+#Removing any time periods where less than 70% of the acoustic data is available - this will result in a couple more surveys being dropped
 
-acousticIndices_richness <- acousticIndices_richness %>% filter(p > 0.7) #remove datapoints where less than 70% of audio was available
-
-# Calculate Noisy miner presence-absence ----
-acousticIndices_richness <- acousticIndices_richness %>% mutate(NoisyPreAbs = as_factor(case_when(
-  NumberNoisyMiner > 0 ~ 1,
-  NumberNoisyMiner == 0 ~ 0
-)), .after = "NumberNoisyMiner")
-
-# Combine replicates ----
-
-#combine indices and biodiversity numbers wihtin sampling season (e.g. take mean or max of replicates)
-acousticIndices_richness_repscombined <- acousticIndices_richness %>% 
-  group_by(Site, seasonYear, season, type) %>% 
-  summarise(Total20m = mean(Total20m), #have taken mean of counts
-            Total40m = mean(Total40m),
-            Diversity20m = max(Diversity20m), #have taken max of diversity
-            Diversity40m = max(Diversity40m),
-            NoisyPreAbs = as_factor(max(as.numeric(as.character(NoisyPreAbs)))),
-            NumberNoisyMiner = mean(NumberNoisyMiner), #have taken mean of number noisy miner
-            across(.cols = ends_with(c("_mean", "_median", "_iqr", "_sd")), ~ weighted.mean(.x, w = c(n)))) %>% 
-  ungroup()
+#NOTE:
+#BN5 (2021-02-15), BN6 (2021-02-15), and Y2 (2021-07-28) have both replicates of one season conducted on the same day
+#Current solution is to drop these for R1 and R2 combined analysis
+acousticIndices_biodiversity_R1R2combined <- right_join(SurveyDates, acousticIndices_summary) %>% 
+  filter(!(Site == 'BN5' & Date == '2021-02-15'), #removing surveys where both were conducted on same day - only 1 day of audio
+         !(Site == 'BN6' & Date == '2021-02-15'),
+         !(Site == 'Y2' & Date == '2021-07-28')) %>% 
+  filter(p >= 0.7) %>% #remove datapoints where less than 70% of audio was available
+  group_by(Site, Season, SeasonYear, Year, Season2, type) %>% 
+  filter(n() == 2) %>% #A number of sites have survey periods with audio only available for 1 of the two replicates - these will be removed
+  summarise(across(.cols = ends_with(c("_mean", "_median", "_iqr", "_sd")), ~ weighted.mean(.x, w = c(n)))) %>% #average acoustic indices using a weighted mean of the number of minutes
+  left_join(biodiversity_R1R2combined, by = c("Site" = "SiteID", "Season2" = "Season", "Year" = "Year"))
 
 
-# Save datasets ----
+ # ├ R1Only ----
+  
+acousticIndices_biodiversity_R1Only <- right_join(SurveyDates, acousticIndices_summary) %>% 
+  filter(p >= 0.7 & Repeat == 1) %>%
+  left_join(biodiversity_R1R2combined, by = c("Site" = "SiteID", "Season2" = "Season", "Year" = "Year"))
+  
 
-saveRDS(acousticIndices_richness, "outputs/data/acousticIndices_richness.RDS")
-saveRDS(acousticIndices_richness_repscombined, "outputs/data/acousticIndices_richness_repscombined.RDS")
+# Combine & Save ----
+
+acousticIndices_biodiversity <- list(R1Only = acousticIndices_biodiversity_R1Only,
+                                     R1R2Combined = acousticIndices_biodiversity_R1R2combined)
+
+saveRDS(acousticIndices_biodiversity, "outputs/data/acousticIndices_biodiversity.RDS")
