@@ -61,14 +61,16 @@ acousticIndices_biodiversity_R1R2combined <- right_join(SurveyDates, acousticInd
   group_by(Site, Season, SeasonYear, Year, Season2, type) %>% 
   filter(n() == 2) %>% #A number of sites have survey periods with audio only available for 1 of the two replicates - these will be removed
   summarise(across(.cols = ends_with(c("_mean", "_median", "_iqr", "_sd")), ~ weighted.mean(.x, w = c(n)))) %>% #average acoustic indices using a weighted mean of the number of minutes
-  left_join(biodiversity_R1R2combined, by = c("Site" = "SiteID", "Season2" = "Season", "Year" = "Year"))
+  left_join(biodiversity_R1R2combined, by = c("Site" = "SiteID", "Season2" = "Season", "Year" = "Year")) %>% 
+  ungroup()
 
 
  # ├ R1Only ----
   
 acousticIndices_biodiversity_R1Only <- right_join(SurveyDates, acousticIndices_summary) %>% 
   filter(p >= 0.7 & Repeat == 1) %>%
-  left_join(biodiversity_R1only, by = c("Site" = "SiteID", "Season2" = "Season", "Year" = "Year"))
+  left_join(biodiversity_R1only, by = c("Site" = "SiteID", "Season2" = "Season", "Year" = "Year")) %>% 
+  ungroup()
   
 
 # Combine & Save ----

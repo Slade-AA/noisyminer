@@ -8,48 +8,112 @@ library(ggpubr)
 
 # Load indices and biodiversity data ----
 
-acousticIndices_richness <- readRDS("outputs/data/acousticIndices_richness.RDS")
-acousticIndices_richness_repscombined <- readRDS("outputs/data/acousticIndices_richness_repscombined.RDS")
+acousticIndices_biodiversity <- readRDS("outputs/data/acousticIndices_biodiversity.RDS")
 
 # Plot scatterplots of individual indices and biodiversity ----
 
-# ├ All data points ----
-for (measure in c('Total20m', 'Total40m', 'Diversity20m', 'Diversity40m', 'NumberNoisyMiner')) {
-  for (timeDay in c('dawnChorus', 'solarNoon', 'eveningChorus', 'day')) {
+# ├ R1Only ----
+
+dir.create("outputs/figures/basicplots/R1Only/scatterplots")
+
+for (measure in c('Total20', 'Total40', 'Detected20', 'Detected40', 'TotalMiner20', 'TotalMiner40')) {
+  for (timeDay in c('dawn', 'solarNoon', 'dusk', 'day')) {
     Scatterplots <- list()
-    for (index in colnames(select(acousticIndices_richness, ends_with(c("mean"))))) {
-      Scatterplots[[index]] <- ggplot(data = acousticIndices_richness[acousticIndices_richness$type == timeDay,], aes_string(x = measure, y = index)) +
+    for (index in colnames(select(acousticIndices_biodiversity$R1Only, ends_with(c("mean"))))) {
+      Scatterplots[[index]] <- ggplot(data = acousticIndices_biodiversity$R1Only[acousticIndices_biodiversity$R1Only$type == timeDay,], aes_string(x = measure, y = index)) +
         geom_point() +
         theme_bw()
     }
-    
     Scatterplot <- plot_grid(plotlist = Scatterplots)
     
-    ggsave(paste0("outputs/figures/basicplots/scatterplot_", measure, "_", timeDay, ".png"),
+    ggsave(paste0("outputs/figures/basicplots/R1Only/scatterplots/scatterplot_", measure, "_", timeDay, ".png"),
            Scatterplot,
            width = 24, height = 24, units = "cm", dpi = 800)
   }
 }
 
-# ├ Replicates combined ----
-for (measure in c('Total20m', 'Total40m', 'Diversity20m', 'Diversity40m', 'NumberNoisyMiner')) {
-  for (timeDay in c('dawnChorus', 'solarNoon', 'eveningChorus', 'day')) {
-    Scatterplots_repscombined <- list()
-    for (index in colnames(select(acousticIndices_richness_repscombined, ends_with(c("mean"))))) {
-      Scatterplots_repscombined[[index]] <- ggplot(data = acousticIndices_richness_repscombined[acousticIndices_richness_repscombined$type == timeDay,], aes_string(x = measure, y = index)) +
+# ├ R1R2Combined ----
+
+dir.create("outputs/figures/basicplots/R1R2Combined/scatterplots")
+
+for (measure in c('Mean20m', 'Mean40m', 'Detected20', 'Detected40', 'MeanMiner20m', 'MeanMiner40m')) {
+  for (timeDay in c('dawn', 'solarNoon', 'dusk', 'day')) {
+    Scatterplots <- list()
+    for (index in colnames(select(acousticIndices_biodiversity$R1R2Combined, ends_with(c("mean"))))) {
+      Scatterplots[[index]] <- ggplot(data = acousticIndices_biodiversity$R1R2Combined[acousticIndices_biodiversity$R1R2Combined$type == timeDay,], aes_string(x = measure, y = index)) +
         geom_point() +
         theme_bw()
     }
+    Scatterplot <- plot_grid(plotlist = Scatterplots)
     
-    Scatterplot_repscombined <- plot_grid(plotlist = Scatterplots_repscombined)
-    
-    ggsave(paste0("outputs/figures/basicplots/scatterplot_", measure, "_", timeDay, "_repscombined.png"),
-           Scatterplot_repscombined,
+    ggsave(paste0("outputs/figures/basicplots/R1R2Combined/scatterplots/scatterplot_", measure, "_", timeDay, ".png"),
+           Scatterplot,
            width = 24, height = 24, units = "cm", dpi = 800)
   }
 }
 
 # Boxplots of acoustic indices and presence-absence noisy miner ----
+
+# ├ R1Only ----
+
+acousticIndices_biodiversity$R1Only <- acousticIndices_biodiversity$R1Only %>% mutate(NMPresent = factor(NMPresent),
+                                                                                      Threshold20m = factor(Threshold20m),
+                                                                                      Threshold40m = factor(Threshold40m))
+dir.create("outputs/figures/basicplots/R1Only/boxplots")
+
+for (measure in c('NMPresent', 'Threshold20m', 'Threshold40m')) {
+  for (timeDay in c('dawn', 'solarNoon', 'dusk', 'day')) {
+    Boxplots_pre_abs <- list()
+    for (index in colnames(select(acousticIndices_biodiversity$R1Only, ends_with(c("mean"))))) {
+      Boxplots_pre_abs[[index]] <- ggplot(data = acousticIndices_biodiversity$R1Only[acousticIndices_biodiversity$R1Only$type == timeDay,], 
+                                          aes_string(x = measure, y = index, fill = measure)) +
+        geom_boxplot() +
+        scale_fill_viridis_d() +
+        theme_bw() +
+        theme(legend.position = "none")
+      
+      
+    }
+    Boxplot_pre_abs <- plot_grid(plotlist = Boxplots_pre_abs)
+    
+    ggsave(paste0("outputs/figures/basicplots/R1Only/boxplots/boxplot_", measure, "_", timeDay, ".png"),
+           Boxplot_pre_abs,
+           width = 24, height = 24, units = "cm", dpi = 800)
+  }
+}
+
+# ├ R1R2Combined ----
+
+acousticIndices_biodiversity$R1R2Combined <- acousticIndices_biodiversity$R1R2Combined %>% mutate(NMPresent = factor(NMPresent),
+                                                                                                  Threshold20m = factor(Threshold20m),
+                                                                                                  Threshold40m = factor(Threshold40m))
+
+dir.create("outputs/figures/basicplots/R1R2Combined/boxplots")
+
+for (measure in c('NMPresent', 'Threshold20m', 'Threshold40m')) {
+  for (timeDay in c('dawn', 'solarNoon', 'dusk', 'day')) {
+    Boxplots_pre_abs <- list()
+    for (index in colnames(select(acousticIndices_biodiversity$R1R2Combined, ends_with(c("mean"))))) {
+      Boxplots_pre_abs[[index]] <- ggplot(data = acousticIndices_biodiversity$R1R2Combined[acousticIndices_biodiversity$R1R2Combined$type == timeDay,], 
+                                          aes_string(x = measure, y = index, fill = measure)) +
+        geom_boxplot() +
+        scale_fill_viridis_d() +
+        theme_bw() +
+        theme(legend.position = "none")
+      
+      
+    }
+    Boxplot_pre_abs <- plot_grid(plotlist = Boxplots_pre_abs)
+    
+    ggsave(paste0("outputs/figures/basicplots/R1R2Combined/boxplots/boxplot_", measure, "_", timeDay, ".png"),
+           Boxplot_pre_abs,
+           width = 24, height = 24, units = "cm", dpi = 800)
+  }
+}
+
+
+
+
 
 # ├ All data points ----
 for (timeDay in c('dawnChorus', 'solarNoon', 'eveningChorus', 'day')) {
