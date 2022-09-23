@@ -10,7 +10,45 @@ library(ggpubr)
 
 acousticIndices_biodiversity <- readRDS("outputs/data/acousticIndices_biodiversity.RDS")
 
-# Plot scatterplots of individual indices and biodiversity ----
+# Plot scatterplots of individual indices and continuous biodiversity measures ----
+
+# Acronyms of acoustic indices for axis labels
+axisLabels <- c("Activity" = "ACT", #AP indices
+                "EventsPerSecond" = "ENV", 
+                "SpectralCentroid" = "CENT", 
+                "HighFreqCover" = "HFC", 
+                "MidFreqCover" = "MFC", 
+                "LowFreqCover" = "LFC", 
+                "AcousticComplexity" = "ACI", 
+                "TemporalEntropy" = "ENT",
+                "EntropyOfAverageSpectrum" = "EAS",  
+                "EntropyOfVarianceSpectrum" = "EVS",
+                "EntropyOfPeaksSpectrum" = "EPS",
+                "EntropyOfCoVSpectrum" = "ECS",
+                "ClusterCount" = "CLS", 
+                "ThreeGramCount" = "TGC", 
+                "Ndsi" = "NDSI", 
+                "SptDensity" = "SPD",
+                "CVR_1166_3646" = bquote("CVR"[chur]),
+                "CVR_0_1166_3646_11025" = bquote("CVR"[!chur]),
+                "CVR_ND" = bquote("CVR"[diff]),
+                "ENT_1166_3646" = bquote("ENT"[chur]),
+                "ENT_0_1166_3646_11025" = bquote("ENT"[!chur]),
+                "ENT_ND" = bquote("ENT"[diff]),
+                'ACI_soundecology' = "ACI", # R indices
+                'ACI_chur' = bquote("ACI"[chur]),
+                'ACI_notchur' = bquote("ACI"[!chur]),
+                'ADI' = "ADI",
+                'AE' = "AE",
+                'NDSI_soundecology' = "NDSI",
+                'NDSI_bio' = bquote("NDSI"[bio]),
+                'NDSI_anthro' = bquote("NDSI"[anthro]),
+                'M' = "M",
+                'H' = "H",
+                'Ht' = "Ht",
+                'Hf' = "Hf",
+                'BI' = "BI",
+                'BI_chur' = bquote("BI"[chur]))
 
 # ├ R1Only ----
 
@@ -21,6 +59,7 @@ for (measure in c('Total20', 'Total40', 'Detected20', 'Detected40', 'TotalMiner2
     Scatterplots <- list()
     for (index in colnames(select(acousticIndices_biodiversity$R1Only, ends_with(c("mean"))))) {
       Scatterplots[[index]] <- ggplot(data = acousticIndices_biodiversity$R1Only[acousticIndices_biodiversity$R1Only$type == timeDay,], aes_string(x = measure, y = index)) +
+        labs(y = axisLabels[[gsub("_mean", "", index)]]) +
         geom_point() +
         theme_bw()
     }
@@ -41,6 +80,7 @@ for (measure in c('Mean20m', 'Mean40m', 'Detected20', 'Detected40', 'MeanMiner20
     Scatterplots <- list()
     for (index in colnames(select(acousticIndices_biodiversity$R1R2Combined, ends_with(c("mean"))))) {
       Scatterplots[[index]] <- ggplot(data = acousticIndices_biodiversity$R1R2Combined[acousticIndices_biodiversity$R1R2Combined$type == timeDay,], aes_string(x = measure, y = index)) +
+        labs(y = axisLabels[[gsub("_mean", "", index)]]) +
         geom_point() +
         theme_bw()
     }
@@ -52,7 +92,7 @@ for (measure in c('Mean20m', 'Mean40m', 'Detected20', 'Detected40', 'MeanMiner20
   }
 }
 
-# Boxplots of acoustic indices and presence-absence noisy miner ----
+# Boxplots of acoustic indices and binary noisy miner measures (presence, threshold20m and threshold40m) ----
 
 # ├ R1Only ----
 
@@ -68,6 +108,7 @@ for (measure in c('NMPresent', 'Threshold20m', 'Threshold40m')) {
       Boxplots_pre_abs[[index]] <- ggplot(data = acousticIndices_biodiversity$R1Only[acousticIndices_biodiversity$R1Only$type == timeDay,], 
                                           aes_string(x = measure, y = index, fill = measure)) +
         geom_boxplot() +
+        labs(y = axisLabels[[gsub("_mean", "", index)]]) +
         scale_fill_viridis_d() +
         theme_bw() +
         theme(legend.position = "none")
@@ -97,6 +138,7 @@ for (measure in c('NMPresent', 'Threshold20m', 'Threshold40m')) {
       Boxplots_pre_abs[[index]] <- ggplot(data = acousticIndices_biodiversity$R1R2Combined[acousticIndices_biodiversity$R1R2Combined$type == timeDay,], 
                                           aes_string(x = measure, y = index, fill = measure)) +
         geom_boxplot() +
+        labs(y = axisLabels[[gsub("_mean", "", index)]]) +
         scale_fill_viridis_d() +
         theme_bw() +
         theme(legend.position = "none")
@@ -109,114 +151,4 @@ for (measure in c('NMPresent', 'Threshold20m', 'Threshold40m')) {
            Boxplot_pre_abs,
            width = 24, height = 24, units = "cm", dpi = 800)
   }
-}
-
-
-
-
-
-# ├ All data points ----
-for (timeDay in c('dawnChorus', 'solarNoon', 'eveningChorus', 'day')) {
-  Boxplots_pre_abs <- list()
-  for (index in colnames(select(acousticIndices_richness, ends_with(c("mean"))))) {
-    Boxplots_pre_abs[[index]] <- ggplot(data = acousticIndices_richness[acousticIndices_richness$type == timeDay,], 
-                                        aes_string(x = "NoisyPreAbs", y = index, fill = "NoisyPreAbs")) +
-      geom_boxplot() +
-      scale_fill_viridis_d() +
-      theme_bw() +
-      theme(legend.position = "none")
-    
-    
-  }
-  Boxplot_pre_abs <- plot_grid(plotlist = Boxplots_pre_abs)
-  
-  ggsave(paste0("outputs/figures/basicplots/boxplot_pre_abs_", timeDay, ".png"),
-         Boxplot_pre_abs,
-         width = 24, height = 24, units = "cm", dpi = 800)
-}
-
-
-# ├ Replicates combined ----
-for (timeDay in c('dawnChorus', 'solarNoon', 'eveningChorus', 'day')) {
-  Boxplots_pre_abs_repscombined <- list()
-  for (index in colnames(select(acousticIndices_richness, ends_with(c("mean"))))) {
-    Boxplots_pre_abs_repscombined[[index]] <- ggplot(data = acousticIndices_richness_repscombined[acousticIndices_richness_repscombined$type == timeDay,], 
-                                                     aes_string(x = "NoisyPreAbs", y = index, fill = "NoisyPreAbs")) +
-      geom_boxplot() +
-      scale_fill_viridis_d() +
-      theme_bw() +
-      theme(legend.position = "none")
-    
-    
-  }
-  Boxplot_pre_abs_repscombined <- plot_grid(plotlist = Boxplots_pre_abs_repscombined)
-  
-  ggsave(paste0("outputs/figures/basicplots/boxplot_pre_abs_", timeDay, "_repscombined.png"),
-         Boxplot_pre_abs_repscombined,
-         width = 24, height = 24, units = "cm", dpi = 800)
-}
-
-
-# Noisy miner numbers over time ----
-
-Plot_Noisyminersovertime <- ggplot(data = acousticIndices_richness[acousticIndices_richness$type == 'dawnChorus',], aes(x = as.Date(Date), y = NumberNoisyMiner, colour = gsub("[0-9]", "",Site))) + 
-  geom_path(size = 1.5) + 
-  facet_wrap(~Site) +
-  labs(x = "Date", y = "Number of Noisy miners", colour = "Region") +
-  theme_bw() +
-  theme(legend.position = "bottom", axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
-
-ggsave("outputs/figures/basicplots/noisyminersovertime.png",
-       Plot_Noisyminersovertime,
-       width = 36, height = 24, units = "cm", dpi = 800)
-
-
-
-
-
-
-
-
-
-
-
-
-
-# Boxplots broken up by site and season ----
-
-timeDay <- 'dawnChorus'
-timeDay <- 'solarNoon'
-timeDay <- 'eveningChorus'
-timeDay <- 'day'
-
-Boxplots_pre_abs <- list()
-for (index in colnames(select(acousticIndices_richness, ends_with(c("mean"))))) {
-  Boxplots_pre_abs[[index]] <- ggplot(data = acousticIndices_richness[acousticIndices_richness$type == timeDay,], 
-                                      aes_string(x = "NoisyPreAbs", y = index, fill = "NoisyPreAbs")) +
-    geom_boxplot() +
-    scale_fill_viridis_d() +
-    theme_bw() +
-    theme(legend.position = "none")
-}
-
-Boxplots_pre_abs_Site <- list()
-for (index in colnames(select(acousticIndices_richness, ends_with(c("mean"))))) {
-  Boxplots_pre_abs_Site[[index]] <- ggplot(data = acousticIndices_richness[acousticIndices_richness$type == timeDay,], 
-                                           aes_string(x = "NoisyPreAbs", y = index, fill = "NoisyPreAbs")) +
-    geom_boxplot() +
-    scale_fill_viridis_d() +
-    facet_wrap(~Site) +
-    theme_bw() +
-    theme(legend.position = "none")
-}
-
-Boxplots_pre_abs_Season <- list()
-for (index in colnames(select(acousticIndices_richness, ends_with(c("mean"))))) {
-  Boxplots_pre_abs_Season[[index]] <- ggplot(data = acousticIndices_richness[acousticIndices_richness$type == timeDay,], 
-                                             aes_string(x = "NoisyPreAbs", y = index, fill = "NoisyPreAbs")) +
-    geom_boxplot() +
-    scale_fill_viridis_d() +
-    facet_wrap(~season) +
-    theme_bw() +
-    theme(legend.position = "none")
 }

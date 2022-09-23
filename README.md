@@ -34,22 +34,22 @@ Ht | Temporal entropy `seewave`
 Hf | Spectral entropy `seewave`
 BI | Bioacoustic index `soundecology`
 **QUT Analysis Programs Indices**|
-Activity (ACT) |
-EventsPerSecond (ENV) | 
+Activity (ACT) | The fraction of values in the noise-reduced decibel envelope that exceed the threshold, θ = 3 dB.
+EventsPerSecond (ENV) | A measure of the number of acoustic events per second, averaged over the same noise-reduced one-minute segment. An acoustic event is defined as starting when the decibel envelope crosses a threshold, θ, from below to above, where θ = 3 dB.
 SpectralCentroid (CENT) | 
-HighFreqCover (HFC) |
-MidFreqCover (MFC) | 
-LowFreqCover (LFC) |
+LowFreqCover (LFC) | The fraction of noise-reduced spectrogram cells that exceed 3 dB in the low-frequency band (1-1000 Hz).
+MidFreqCover (MFC) | As for LFC but in the mid-frequency band (1000-8000 Hz).
+HighFreqCover (HFC) | As for LFC but in the high-frequency band (8000–11025 Hz).
 AcousticComplexity (ACI) | 
 TemporalEntropy (ENT) |
 EntropyOfAverageSpectrum (EAS) |  
 EntropyOfVarianceSpectrum (EVS) |
 EntropyOfPeaksSpectrum (EPS) |
 EntropyOfCoVSpectrum (ECS) |
-ClusterCount (CLS) | 
-ThreeGramCount (TGC) | 
+ClusterCount (CLS) | The number of distinct spectral clusters in the mid-frequency band of a one-minute segment of recording.
+ThreeGramCount (TGC) | COULD REMOVE?
 Ndsi (NDSI) | 
-SptDensity (SPD) |
+SptDensity (SPD) | A measure of the number of cells in the mid-frequency band of a one-minute spectrogram that are identified as being local maxima.
 CVR??? |
 
 
@@ -81,6 +81,15 @@ The aggreated acoustic indices and biodiversity data for [Replicate 1](rawdata/F
 *Note: Noisy miner threshold columns appear to be incorrect in provided rawdata for Replicate 1, and are recalculated in the CombineIndices&Biodiversity.R script.*
 
 ### Plotting and analyses
+
+#### Basic plots
+[BasicPlots.R](scripts/BasicPlots.R) produces scatterplots for each acoustic index and each continuous biodiversity measure () and boxplots for each acoustic index and each binary biodiversity measure (Noisy miner presence-absence, Threshold20m, and Threshold40m).
+
+For example (boxplots of Noisy miner presence for all acoustic indices calculated at dawn):
+![](outputs/figures/basicplots/R1Only/boxplots/boxplot_NMPresent_dawn.png)
+
+See [outputs/figures/basicplots](outputs/figures/basicplots) for all plots.
+
 
 #### Correlation between biodiversity and individual indices
 Bootstrap spearman correlations are calculated for all acoustic indices and bird biodiversity measures (all birds and miner measures) in the [BootstrapCorrelationPlots_Spearman.R](scripts/BootstrapCorrelationPlots_Spearman.R) script.
