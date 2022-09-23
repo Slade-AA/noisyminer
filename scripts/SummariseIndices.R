@@ -70,6 +70,8 @@ suntimes <- suntimes %>% rename(Date = date) %>% mutate(Date = as.character(Date
 
 combinedIndices <- left_join(combinedIndices, suntimes)
 
+saveRDS(combinedIndices, "outputs/data/combinedIndices.RDS")
+
 # Summarise indices by time periods ----
 
 # ├ Summarise dawn (30 mins before dawn to 90 mins post dawn) ----

@@ -33,6 +33,14 @@ for (file in summaryIndicesFiles) {
                     ACI_notchur = tmp$ACI_soundecology - tmp$ACI_chur,
                     .after = "ACI_chur")
   
+  #Extract ADI value for 2-3kHz frequency bin
+  tmp <- add_column(tmp,
+                    ADI_Miner = as.numeric(lapply(tmp$ADI_values, function(x) x[3])),
+                    .after = "ADI")
+  tmp <- add_column(tmp,
+                    ADI_NotMiner = as.numeric(lapply(tmp$ADI_values, function(x) mean(x[c(1:2,4:10)]))),
+                    .after = "ADI")
+  
   summaryIndices[[paste0(tmp$Site[1], "_", tmp$Time[1])]] <- tmp
   
   remove(tmp)

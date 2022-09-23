@@ -8,6 +8,9 @@ library(lubridate)
 # Read in indices, add columns for site, sensor etc. ----
 
 frequencyBand <- c(low = 1166, high = 3646) #Noisy miner 'churr' vocalisation
+#frequencyBand <- c(low = 2000, high = 3000) #Paul McDonald's recommended frequency band for Miner calls
+#windBand <- c(low = 0, high = 500)
+#windBands <- c(low1 = 0, high1 = 500, low2 = 3000, high2 = 3500) #check two bands for wind/rain?
 indices <- c('CVR', 'ENT')
 
 
