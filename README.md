@@ -124,3 +124,7 @@ See [outputs/figures/pca](outputs/figures/pca) for all plots.
 Here is the plot for Replicate 1 and 2 combined and the Threshold40m response (A:'dawn', B:'solarNoon', C:'dusk', D:'day'):
 
 ![](outputs/figures/pca/R1R2Combined - Threshold40m.png)
+
+Attempting to use unique time-of-day periods per acoustic index (selected based on their highest correlation with MeanMiner40m) produced similar results:
+
+![](outputs/figures/pca/BestTimePeriodPerIndex_Threshold40m.png)

@@ -6,3 +6,6 @@ outputs/indices
 outputs/workspaces
 outputs/figures/_paul_forhismeeting
 outputs/figures/_paul_meeting01
+outputs/figures/observedvspredicted_lmpca
+outputs/figures/observedvspredicted_rf&xgboost
+outputs/data/combinedIndices.RDS
