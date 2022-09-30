@@ -115,7 +115,7 @@ Correlation of individual acoustic indices and bird biodiversity measures (Total
 
 Correlation of individual acoustic indices and bird biodiversity measures (Total 20 minutes, Total 40 minutes, Species Diversity 20 minutes, Species Diversity 40 minutes) for Replicates 1 & 2 combined.
 
-![]()
+![](outputs/figures/bootstrapcorrelations/R1R2Combined_correlationPlot_total_diversity_R_spearman.png)
 
 #### PCA plots of Noisy miner presence
 
