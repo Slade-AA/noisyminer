@@ -129,7 +129,7 @@ for (measure in c('Total20', 'Total40', 'Detected20', 'Detected40')) {
   tmp_data$Index <- fct_relevel(tmp_data$Index, names(axisLabels_AP))
   
   correlationPlots_total_diversity_AP[[measure]] <- ggplot(data = tmp_data, aes(x = Mean, y = Index, group = Time, colour = Time)) +
-    geom_vline(xintercept = seq(-0.8, 0.8, 0.2), linetype = 'dotted') +
+    geom_vline(xintercept = seq(-0.8, 0.8, 0.4), linetype = 'dotted') +
     geom_vline(xintercept = 0, linetype = 'dashed') +
     geom_pointrange(aes(xmin = Low, xmax = High), position = position_dodge(width = 0.4)) +
     scale_x_continuous(limits = c(-0.9, 0.9), breaks = seq(-0.8, 0.8, 0.4)) +
@@ -151,7 +151,8 @@ legend_bottom <- get_legend(
 correlationPlot_total_diversity_AP <- plot_grid(plotlist = correlationPlots_total_diversity_AP,
                                                 ncol = 2, nrow = 2,
                                                 labels = c("A - Total 20m", "B - Total 40m",
-                                                           "C - Diversity 20m", "D - Diversity 40m")) %>% 
+                                                           "C - Diversity 20m", "D - Diversity 40m"),
+                                                hjust = 0, label_x = 0.12) %>% 
   annotate_figure(left = "Acoustic index", bottom = "Mean correlation") %>% 
   plot_grid(legend_bottom, ncol = 1, rel_heights = c(1, .1))
 
@@ -167,7 +168,7 @@ for (measure in c('Total20', 'Total40', 'Detected20', 'Detected40')) {
   tmp_data$Index <- fct_relevel(tmp_data$Index, names(axisLabels_R))
   
   correlationPlots_total_diversity_R[[measure]] <- ggplot(data = tmp_data, aes(x = Mean, y = Index, group = Time, colour = Time)) +
-    geom_vline(xintercept = seq(-0.8, 0.8, 0.2), linetype = 'dotted') +
+    geom_vline(xintercept = seq(-0.8, 0.8, 0.4), linetype = 'dotted') +
     geom_vline(xintercept = 0, linetype = 'dashed') +
     geom_pointrange(aes(xmin = Low, xmax = High), position = position_dodge(width = 0.4)) +
     scale_x_continuous(limits = c(-0.9, 0.9), breaks = seq(-0.8, 0.8, 0.4)) +
@@ -188,7 +189,8 @@ legend_bottom <- get_legend(
 correlationPlot_total_diversity_R <- plot_grid(plotlist = correlationPlots_total_diversity_R,
                                                 ncol = 2, nrow = 2,
                                                 labels = c("A - Total 20m", "B - Total 40m",
-                                                           "C - Diversity 20m", "D - Diversity 40m")) %>% 
+                                                           "C - Diversity 20m", "D - Diversity 40m"),
+                                               hjust = 0, label_x = 0.16) %>% 
   annotate_figure(left = "Acoustic index", bottom = "Mean correlation") %>% 
   plot_grid(legend_bottom, ncol = 1, rel_heights = c(1, .1))
 
@@ -208,7 +210,7 @@ for (measure in c('TotalMiner20', 'TotalMiner40')) {
     tmp_data$Index <- fct_relevel(tmp_data$Index, names(acousticIndices_set[[indexSet]]))
     
     correlationPlots_NumberNoisyMiner[[paste0(measure, "_", names(acousticIndices_set)[indexSet])]] <- ggplot(data = tmp_data, aes(x = Mean, y = Index, group = Time, colour = Time)) +
-      geom_vline(xintercept = seq(-0.8, 0.8, 0.2), linetype = 'dotted') +
+      geom_vline(xintercept = seq(-0.8, 0.8, 0.4), linetype = 'dotted') +
       geom_vline(xintercept = 0, linetype = 'dashed') +
       geom_pointrange(aes(xmin = Low, xmax = High), position = position_dodge(width = 0.4)) +
       scale_x_continuous(limits = c(-0.9, 0.9), breaks = seq(-0.8, 0.8, 0.4)) +
@@ -283,7 +285,7 @@ for (measure in c('Mean20m', 'Mean40m', 'Detected20', 'Detected40')) {
   tmp_data$Index <- fct_relevel(tmp_data$Index, names(axisLabels_AP))
   
   correlationPlots_total_diversity_AP[[measure]] <- ggplot(data = tmp_data, aes(x = Mean, y = Index, group = Time, colour = Time)) +
-    geom_vline(xintercept = seq(-0.8, 0.8, 0.2), linetype = 'dotted') +
+    geom_vline(xintercept = seq(-0.8, 0.8, 0.4), linetype = 'dotted') +
     geom_vline(xintercept = 0, linetype = 'dashed') +
     geom_pointrange(aes(xmin = Low, xmax = High), position = position_dodge(width = 0.4)) +
     scale_x_continuous(limits = c(-0.9, 0.9), breaks = seq(-0.8, 0.8, 0.4)) +
@@ -305,7 +307,8 @@ legend_bottom <- get_legend(
 correlationPlot_total_diversity_AP <- plot_grid(plotlist = correlationPlots_total_diversity_AP,
                                                 ncol = 2, nrow = 2,
                                                 labels = c("A - Total 20m", "B - Total 40m",
-                                                           "C - Diversity 20m", "D - Diversity 40m")) %>% 
+                                                           "C - Diversity 20m", "D - Diversity 40m"),
+                                                hjust = 0, label_x = 0.12) %>% 
   annotate_figure(left = "Acoustic index", bottom = "Mean correlation") %>% 
   plot_grid(legend_bottom, ncol = 1, rel_heights = c(1, .1))
 
@@ -321,7 +324,7 @@ for (measure in c('Mean20m', 'Mean40m', 'Detected20', 'Detected40')) {
   tmp_data$Index <- fct_relevel(tmp_data$Index, names(axisLabels_R))
   
   correlationPlots_total_diversity_R[[measure]] <- ggplot(data = tmp_data, aes(x = Mean, y = Index, group = Time, colour = Time)) +
-    geom_vline(xintercept = seq(-0.8, 0.8, 0.2), linetype = 'dotted') +
+    geom_vline(xintercept = seq(-0.8, 0.8, 0.4), linetype = 'dotted') +
     geom_vline(xintercept = 0, linetype = 'dashed') +
     geom_pointrange(aes(xmin = Low, xmax = High), position = position_dodge(width = 0.4)) +
     scale_x_continuous(limits = c(-0.9, 0.9), breaks = seq(-0.8, 0.8, 0.4)) +
@@ -342,7 +345,8 @@ legend_bottom <- get_legend(
 correlationPlot_total_diversity_R <- plot_grid(plotlist = correlationPlots_total_diversity_R,
                                                ncol = 2, nrow = 2,
                                                labels = c("A - Total 20m", "B - Total 40m",
-                                                          "C - Diversity 20m", "D - Diversity 40m")) %>% 
+                                                          "C - Diversity 20m", "D - Diversity 40m"),
+                                               hjust = 0, label_x = 0.16) %>% 
   annotate_figure(left = "Acoustic index", bottom = "Mean correlation") %>% 
   plot_grid(legend_bottom, ncol = 1, rel_heights = c(1, .1))
 
@@ -362,7 +366,7 @@ for (measure in c('MeanMiner20m', 'MeanMiner40m')) {
     tmp_data$Index <- fct_relevel(tmp_data$Index, names(acousticIndices_set[[indexSet]]))
     
     correlationPlots_NumberNoisyMiner[[paste0(measure, "_", names(acousticIndices_set)[indexSet])]] <- ggplot(data = tmp_data, aes(x = Mean, y = Index, group = Time, colour = Time)) +
-      geom_vline(xintercept = seq(-0.8, 0.8, 0.2), linetype = 'dotted') +
+      geom_vline(xintercept = seq(-0.8, 0.8, 0.4), linetype = 'dotted') +
       geom_vline(xintercept = 0, linetype = 'dashed') +
       geom_pointrange(aes(xmin = Low, xmax = High), position = position_dodge(width = 0.4)) +
       scale_x_continuous(limits = c(-0.9, 0.9), breaks = seq(-0.8, 0.8, 0.4)) +
