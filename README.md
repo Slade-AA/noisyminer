@@ -17,7 +17,7 @@ Acoustic indices were generated for all recordings at a 1-minute temporal resolu
 * [CalculateIndices_R.R](scripts/CalculateIndices_R.R)
 * [CalculateIndices_AP.R](scripts/CalculateIndices_AP.R)
 
-The following acoustic indices have been generated:
+The following acoustic indices have been generated (all QUT indices are using default settings):
 
 Acoustic Index | Defition, packages, settings etc.
 -------|---------------
@@ -33,24 +33,24 @@ H | Total entropy `seewave`
 Ht | Temporal entropy `seewave`
 Hf | Spectral entropy `seewave`
 BI | Bioacoustic index `soundecology`
-**QUT Analysis Programs Indices**|
+**QUT Analysis Programs Indices**| 
 Activity (ACT) | The fraction of values in the noise-reduced decibel envelope that exceed the threshold, θ = 3 dB.
 EventsPerSecond (ENV) | A measure of the number of acoustic events per second, averaged over the same noise-reduced one-minute segment. An acoustic event is defined as starting when the decibel envelope crosses a threshold, θ, from below to above, where θ = 3 dB.
 SpectralCentroid (CENT) | 
 LowFreqCover (LFC) | The fraction of noise-reduced spectrogram cells that exceed 3 dB in the low-frequency band (1-1000 Hz).
 MidFreqCover (MFC) | As for LFC but in the mid-frequency band (1000-8000 Hz).
 HighFreqCover (HFC) | As for LFC but in the high-frequency band (8000–11025 Hz).
-AcousticComplexity (ACI) | 
-TemporalEntropy (ENT) |
-EntropyOfAverageSpectrum (EAS) |  
-EntropyOfVarianceSpectrum (EVS) |
-EntropyOfPeaksSpectrum (EPS) |
-EntropyOfCoVSpectrum (ECS) |
+AcousticComplexity (ACI) | A measure of the relative change in acoustic intensity in each frequency bin.
+TemporalEntropy (ENT) | Entropy of the energy (squared amplitude) values of the signal waveform.
+EntropyOfAverageSpectrum (EAS) | A measure of the ‘concentration’ of mean energy within the mid-band of the mean-energy spectrum.
+EntropyOfVarianceSpectrum (EVS) | 
+EntropyOfPeaksSpectrum (EPS) | A measure of the ‘concentration’ of spectral maxima in the mid-band.
+EntropyOfCoVSpectrum (ECS) | 
 ClusterCount (CLS) | The number of distinct spectral clusters in the mid-frequency band of a one-minute segment of recording.
-ThreeGramCount (TGC) | COULD REMOVE?
-Ndsi (NDSI) | 
+ThreeGramCount (TGC) |  Number of 3-gram cluster sequences
+Ndsi (NDSI) | NDSI aims at estimating the level of anthropogenic disturbance on the soundscape by computing the ratio of human-generated (anthropophony) to biological (biophony) acoustic components 
 SptDensity (SPD) | A measure of the number of cells in the mid-frequency band of a one-minute spectrogram that are identified as being local maxima.
-CVR??? |
+Acoustic Cover (CVR) | The average fraction of each frequency bin of the noise-reduced spectrogram where the spectral power exceeds 2 dB.
 
 
 The following Noisy miner specific acoustic indices have been tried so far:
@@ -89,8 +89,6 @@ All the following are done for both Replicate 1 only and Replicate 1&2 combined 
 
 For example (boxplots of Noisy miner presence for all acoustic indices calculated at dawn):
 
-![](outputs/figures/basicplots/R1Only/boxplots/boxplot_NMPresent_dawn.png)
-
 <p>
 <img src="./outputs/figures/basicplots/R1Only/boxplots/boxplot_NMPresent_dawn.png" width=50% height=50%>
 </p>
@@ -113,15 +111,15 @@ Linear discriminant analysis (LDA) was used to try to develop predictive models 
 
 #### Correlation between biodiversity and individual indices
 
-In general, all acoustic indices had relatively low (or no) correlation with any of the bird biodiversity measures examined at any daily time period for both Replicate 1 (Figure 2) and Replicate 1 and Replicate 2 combined (Figure 3).
+In general, all acoustic indices had relatively low (or no) correlation with any of the bird biodiversity measures examined at any daily time period for both Replicate 1 (Figure 1) and Replicate 1 and Replicate 2 combined (Figure 2).
 
 
 ![](outputs/figures/bootstrapcorrelations/R1Only_correlationPlot_total_diversity_R_spearman.png)
-*Figure 2. Bootstrap spearman correlation estimates of individual acoustic indices and bird biodiversity measures (Total 20 minutes, Total 40 minutes, Species Diversity 20 minutes, Species Diversity 40 minutes) for Replicate 1.*
+*Figure 1. Bootstrap spearman correlation estimates of individual acoustic indices and bird biodiversity measures (Total 20 minutes, Total 40 minutes, Species Diversity 20 minutes, Species Diversity 40 minutes) for Replicate 1.*
 
 
 ![](outputs/figures/bootstrapcorrelations/R1R2Combined_correlationPlot_total_diversity_R_spearman.png)
-*Figure 3. Bootstrap spearman correlation estimates of individual acoustic indices and bird biodiversity measures (Total 20 minutes, Total 40 minutes, Species Diversity 20 minutes, Species Diversity 40 minutes) for Replicates 1 & 2 combined.*
+*Figure 2. Bootstrap spearman correlation estimates of individual acoustic indices and bird biodiversity measures (Total 20 minutes, Total 40 minutes, Species Diversity 20 minutes, Species Diversity 40 minutes) for Replicates 1 & 2 combined.*
 
 Note: The above figures are for the indices generated using R. There are similar plots for indices created using QUT's Analysis Programs [here](outputs/figures/bootstrapcorrelations/R1Only_correlationPlot_total_diversity_AP_spearman.png) and [here](outputs/figures/bootstrapcorrelations/R1R2Combined_correlationPlot_total_diversity_AP_spearman.png), as well as a single plot with a reduced set of combined indices [here](outputs/figures/bootstrapcorrelations/R1Only_correlationPlot_total_diversity_ReducedSet_spearman.png) and [here](outputs/figures/bootstrapcorrelations/R1R2Combined_correlationPlot_total_diversity_ReducedSet_spearman.png).
 
@@ -129,14 +127,14 @@ Similarly low correlations were found for the Number of noisy miners. See [here]
 
 #### PCA plots of Noisy miner presence
 
-There was poor separation between Noisy miner presence variables using combinations of acoustic indices in a PCA at any time period (Figure 4).
+There was poor separation between Noisy miner presence variables using combinations of acoustic indices in a PCA at any time period (Figure 3).
 
 ![](outputs/figures/pca/R1R2Combined%20-%20Threshold40m.png)
-*Figure 4. PCA plots for Replicate 1 and 2 combined and the Threshold40m response (A:'dawn', B:'solarNoon', C:'dusk', D:'day')*
+*Figure 3. PCA plots for Replicate 1 and 2 combined and the Threshold40m response (A:'dawn', B:'solarNoon', C:'dusk', D:'day')*
 
-Attempting to use unique time-of-day periods per acoustic index (selected based on their highest correlation with MeanMiner40m) produced similar results (Figure 5).
+Attempting to use unique time-of-day periods per acoustic index (selected based on their highest correlation with MeanMiner40m) produced similar results (Figure 4).
 
 ![](outputs/figures/pca/BestTimePeriodPerIndex_Threshold40m.png)
-*Figure 5. PCA plot for Replicate 1 and 2 combined and the Threshold40m response using unique time periods per acoustic index*
+*Figure 4. PCA plot for Replicate 1 and 2 combined and the Threshold40m response using unique time periods per acoustic index*
 
 See [outputs/figures/pca](outputs/figures/pca) for all PCA plots.
