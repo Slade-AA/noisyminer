@@ -107,24 +107,32 @@ PCA plots were produced for all Noisy miner presence variables (R1Only - Detecte
 ***
 ## Results
 
-#### Correlation plots
+#### Correlation between biodiversity and individual indices
 
-Correlation of individual acoustic indices and bird biodiversity measures (Total 20 minutes, Total 40 minutes, Species Diversity 20 minutes, Species Diversity 40 minutes) for Replicate 1.
+In general, all acoustic indices had relatively low (or no) correlation with any of the bird biodiversity measures examined at any daily time period for both Replicate 1 (Figure 2) and Replicate 1 and Replicate 2 combined (Figure 3).
+
 
 ![](outputs/figures/bootstrapcorrelations/R1Only_correlationPlot_total_diversity_R_spearman.png)
+*Figure 2. Bootstrap spearman correlation estimates of individual acoustic indices and bird biodiversity measures (Total 20 minutes, Total 40 minutes, Species Diversity 20 minutes, Species Diversity 40 minutes) for Replicate 1.*
 
-Correlation of individual acoustic indices and bird biodiversity measures (Total 20 minutes, Total 40 minutes, Species Diversity 20 minutes, Species Diversity 40 minutes) for Replicates 1 & 2 combined.
 
 ![](outputs/figures/bootstrapcorrelations/R1R2Combined_correlationPlot_total_diversity_R_spearman.png)
+*Figure 3. Bootstrap spearman correlation estimates of individual acoustic indices and bird biodiversity measures (Total 20 minutes, Total 40 minutes, Species Diversity 20 minutes, Species Diversity 40 minutes) for Replicates 1 & 2 combined.*
+
+Note: The above figures are for the indices generated using R. There are similar plots for indices created using QUT's Analysis Programs [here](outputs/figures/bootstrapcorrelations/R1Only_correlationPlot_total_diversity_AP_spearman.png) and [here](outputs/figures/bootstrapcorrelations/R1R2Combined_correlationPlot_total_diversity_AP_spearman.png), as well as a single plot with a reduced set of combined indices [here](outputs/figures/bootstrapcorrelations/R1Only_correlationPlot_total_diversity_ReducedSet_spearman.png) and [here](outputs/figures/bootstrapcorrelations/R1R2Combined_correlationPlot_total_diversity_ReducedSet_spearman.png).
+
+Similarly low correlations were found for the Number of noisy miners. See [here](outputs/figures/bootstrapcorrelations/R1Only_correlationPlot_NumberNoisyMiner_spearman.png) and [here](outputs/figures/bootstrapcorrelations/R1R2Combined_correlationPlot_NumberNoisyMiner_spearman.png) for R1Only and R1R2Combined plots respectively.
 
 #### PCA plots of Noisy miner presence
 
-See [outputs/figures/pca](outputs/figures/pca) for all plots.
-
-Here is the plot for Replicate 1 and 2 combined and the Threshold40m response (A:'dawn', B:'solarNoon', C:'dusk', D:'day'):
+There was poor separation between Noisy miner presence variables using combinations of acoustic indices in a PCA at any time period (Figure 4).
 
 ![](outputs/figures/pca/R1R2Combined%20-%20Threshold40m.png)
+*Figure 4. PCA plots for Replicate 1 and 2 combined and the Threshold40m response (A:'dawn', B:'solarNoon', C:'dusk', D:'day')*
 
-Attempting to use unique time-of-day periods per acoustic index (selected based on their highest correlation with MeanMiner40m) produced similar results:
+Attempting to use unique time-of-day periods per acoustic index (selected based on their highest correlation with MeanMiner40m) produced similar results (Figure 5).
 
 ![](outputs/figures/pca/BestTimePeriodPerIndex_Threshold40m.png)
+*Figure 5. PCA plot for Replicate 1 and 2 combined and the Threshold40m response using unique time periods per acoustic index*
+
+See [outputs/figures/pca](outputs/figures/pca) for all PCA plots.
