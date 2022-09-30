@@ -88,7 +88,9 @@ All the following are done for both Replicate 1 only and Replicate 1&2 combined 
 [BasicPlots.R](scripts/BasicPlots.R) produces scatterplots for each acoustic index and each continuous biodiversity measure (Total20m, Total40m, Diversity20m, Diversity40m, TotalMiner20, TotalMiner40) and boxplots for each acoustic index and each binary biodiversity measure (Noisy miner presence-absence, Threshold20m, and Threshold40m).
 
 For example (boxplots of Noisy miner presence for all acoustic indices calculated at dawn):
-![](outputs/figures/basicplots/R1Only/boxplots/boxplot_NMPresent_dawn.png){width=50%}
+<div style="width: 60%; height: 60%">
+  ![](outputs/figures/basicplots/R1Only/boxplots/boxplot_NMPresent_dawn.png)
+</div>
 
 See [outputs/figures/basicplots](outputs/figures/basicplots) for all plots.
 
@@ -96,12 +98,11 @@ See [outputs/figures/basicplots](outputs/figures/basicplots) for all plots.
 #### Correlation between biodiversity and individual indices
 Bootstrap spearman correlations are calculated for all acoustic indices and bird biodiversity measures (all birds and miner measures) in the [BootstrapCorrelationPlots_Spearman.R](scripts/BootstrapCorrelationPlots_Spearman.R) script.
 
-#### Multiple indices to predict noisy miner presence
-
-##### PCA
+#### Multiple indices to predict noisy miner presence (PCA - LDA)
 
 PCA plots were produced for all Noisy miner presence variables (R1Only - DetectedMiner20, DetectedMiner40, NMPresent, Threshold20m, Threshold40m) using all acoustic indices for the four time periods (dawn, solarNoon, dusk, day).
 
+Linear discriminant analysis (LDA) was used to try to develop predictive models of noisy miner presence using all principal components with eigenvalues greater than 1. Models were fit using a spatial cross-validation process to estimate their ability to predict noisy miner presence. Data for each region was left out in an iterative process with the data for all other regions used to fit the lda model which was then used to predict on the held-out data. Performance of these models was low/no better than random. Code is implemented in the [PCA_DFA.R](scripts/PCA_DFA.R) script.
 
 
 ***
