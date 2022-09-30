@@ -58,7 +58,7 @@ The following Noisy miner specific acoustic indices have been tried so far:
 Acoustic Index | Def
 -------|---------------
 Bio_chur | Bioacoustic index calculated between 1166 and 3646 Hz. Based on the peak frequency (+-1 SD) of the 'chur' vocalisation in [Holt et al. 2017](https://www.tandfonline.com/doi/full/10.1080/01584197.2016.1252508)
-CVR_ | Cover index between xxx Hz and xxx Hz - 
+CVR_ | Cover index between xxx Hz and xxx Hz - approximately same frequency as above
 ENT_ | TemporalEntropy index between xxx Hz and xxx Hz -
 
 
@@ -82,17 +82,27 @@ The aggreated acoustic indices and biodiversity data for [Replicate 1](rawdata/F
 
 ### Plotting and analyses
 
+All the following are done for both Replicate 1 only and Replicate 1&2 combined datasets.
+
 #### Basic plots
-[BasicPlots.R](scripts/BasicPlots.R) produces scatterplots for each acoustic index and each continuous biodiversity measure () and boxplots for each acoustic index and each binary biodiversity measure (Noisy miner presence-absence, Threshold20m, and Threshold40m).
+[BasicPlots.R](scripts/BasicPlots.R) produces scatterplots for each acoustic index and each continuous biodiversity measure (Total20m, Total40m, Diversity20m, Diversity40m, TotalMiner20, TotalMiner40) and boxplots for each acoustic index and each binary biodiversity measure (Noisy miner presence-absence, Threshold20m, and Threshold40m).
 
 For example (boxplots of Noisy miner presence for all acoustic indices calculated at dawn):
-![](outputs/figures/basicplots/R1Only/boxplots/boxplot_NMPresent_dawn.png)
+![](outputs/figures/basicplots/R1Only/boxplots/boxplot_NMPresent_dawn.png){width=50%}
 
 See [outputs/figures/basicplots](outputs/figures/basicplots) for all plots.
 
 
 #### Correlation between biodiversity and individual indices
 Bootstrap spearman correlations are calculated for all acoustic indices and bird biodiversity measures (all birds and miner measures) in the [BootstrapCorrelationPlots_Spearman.R](scripts/BootstrapCorrelationPlots_Spearman.R) script.
+
+#### Multiple indices to predict noisy miner presence
+
+##### PCA
+
+PCA plots were produced for all Noisy miner presence variables (R1Only - DetectedMiner20, DetectedMiner40, NMPresent, Threshold20m, Threshold40m) using all acoustic indices for the four time periods (dawn, solarNoon, dusk, day).
+
+
 
 ***
 ## Results
@@ -106,3 +116,11 @@ Correlation of individual acoustic indices and bird biodiversity measures (Total
 Correlation of individual acoustic indices and bird biodiversity measures (Total 20 minutes, Total 40 minutes, Species Diversity 20 minutes, Species Diversity 40 minutes) for Replicates 1 & 2 combined.
 
 ![]()
+
+#### PCA plots of Noisy miner presence
+
+See [outputs/figures/pca](outputs/figures/pca) for all plots.
+
+Here is the plot for Replicate 1 and 2 combined and the Threshold40m response (A:'dawn', B:'solarNoon', C:'dusk', D:'day'):
+
+![](outputs/figures/pca/R1R2Combined - Threshold40m.png)
