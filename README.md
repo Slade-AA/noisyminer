@@ -88,9 +88,12 @@ All the following are done for both Replicate 1 only and Replicate 1&2 combined 
 [BasicPlots.R](scripts/BasicPlots.R) produces scatterplots for each acoustic index and each continuous biodiversity measure (Total20m, Total40m, Diversity20m, Diversity40m, TotalMiner20, TotalMiner40) and boxplots for each acoustic index and each binary biodiversity measure (Noisy miner presence-absence, Threshold20m, and Threshold40m).
 
 For example (boxplots of Noisy miner presence for all acoustic indices calculated at dawn):
-<div style="width: 60%; height: 60%">
-  ![](outputs/figures/basicplots/R1Only/boxplots/boxplot_NMPresent_dawn.png)
-</div>
+
+![](outputs/figures/basicplots/R1Only/boxplots/boxplot_NMPresent_dawn.png)
+
+<p>
+<img src="./outputs/figures/basicplots/R1Only/boxplots/boxplot_NMPresent_dawn.png" width=50% height=50%>
+</p>
 
 See [outputs/figures/basicplots](outputs/figures/basicplots) for all plots.
 
