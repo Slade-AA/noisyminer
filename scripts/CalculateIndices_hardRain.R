@@ -7,7 +7,13 @@ library(seewave)
 library(foreach)
 library(doParallel)
 
-wavFiles <- c(list.files(path = "S:/JCU/NoisyMiner_Recordings/RC6", pattern = "*.wav", recursive = TRUE, full.names = TRUE))
+wavFiles <- c(list.files(path = "S:/JCU/NoisyMiner_Recordings/Y4", pattern = "*.wav", recursive = TRUE, full.names = TRUE),
+              list.files(path = "S:/JCU/NoisyMiner_Recordings/SR10", pattern = "*.wav", recursive = TRUE, full.names = TRUE),
+              list.files(path = "S:/JCU/NoisyMiner_Recordings/SR9", pattern = "*.wav", recursive = TRUE, full.names = TRUE),
+              list.files(path = "S:/JCU/NoisyMiner_Recordings/SR8", pattern = "*.wav", recursive = TRUE, full.names = TRUE),
+              list.files(path = "S:/JCU/NoisyMiner_Recordings/SR7", pattern = "*.wav", recursive = TRUE, full.names = TRUE),
+              list.files(path = "S:/JCU/NoisyMiner_Recordings/SR6", pattern = "*.wav", recursive = TRUE, full.names = TRUE),
+              list.files(path = "S:/JCU/NoisyMiner_Recordings/SR5", pattern = "*.wav", recursive = TRUE, full.names = TRUE))
 
 
 #check if indices have already been calculated for any of these files
@@ -34,6 +40,11 @@ for (wavFile in wavFiles) {
   try({wavHeader <- readWave(wavFile, header = TRUE)})
   if (exists("wavHeader") == FALSE) {
     print(paste0("Issue with audio recording - Skipping file: ", wavFile))
+    next
+  }
+  
+  if (wavHeader$samples < 44100) {
+    print(paste0("Issue with audio recording (recording too short!) - Skipping file: ", wavFile))
     next
   }
   
