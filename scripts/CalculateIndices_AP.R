@@ -34,7 +34,7 @@ generate.fcs <- function(audio.directory, rawoutput.directory) {
     #file_name <- basename(file)
     
     # make a folder for results - name contains audio file name
-    output_folder <-normalizePath(gsub(".wav", "", gsub("NoisyMiner_Recordings", "NoisyMiner_Indices_AP", file)), mustWork = FALSE)
+    output_folder <- normalizePath(gsub(".wav", "", gsub("NoisyMiner_Recordings", "NoisyMiner_Indices_AP", file)), mustWork = FALSE)
     
     #output_folder <- normalizePath(file.path(rawoutput.directory, file_name), mustWork = FALSE)
     dir.create(output_folder, recursive = TRUE)

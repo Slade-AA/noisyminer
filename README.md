@@ -57,7 +57,7 @@ The following Noisy miner specific acoustic indices have been tried so far:
 
 Acoustic Index | Def
 -------|---------------
-Bio_chur | Bioacoustic index calculated between 1166 and 3646 Hz. Based on the peak frequency (+-1 SD) of the 'chur' vocalisation in [Holt et al. 2017](https://www.tandfonline.com/doi/full/10.1080/01584197.2016.1252508)
+Bio_chur | Bioacoustic index calculated between 1166 and 3646 Hz. Based on the peak frequency (+-1 SD) of the 'chur' vocalisation in [Holt et al. 2017](https://www.tandfonline.com/doi/full/10.1080/01584197.2016.1252508).
 CVR_chur | Cover index between approximately the same frequency range as above
 ENT_chur | TemporalEntropy between approximately the same frequency range as above
 
