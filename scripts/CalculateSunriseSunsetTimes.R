@@ -10,7 +10,7 @@ GPS_Site <- read.csv(file = "outputs/GPS_Site.csv")
 
 # Create long data frame of all dates ----
 
-dates <- expand.grid(date = seq(ymd('2019-08-01'),ymd('2022-03-31'), by = '1 day'),
+dates <- expand.grid(date = seq(ymd('2019-08-01'),ymd('2023-05-31'), by = '1 day'),
                      Site = unique(GPS_Site$Site))
 
 GPS_Site_AllDays <- full_join(GPS_Site, dates)
