@@ -49,6 +49,27 @@ unique(gsub("Y1_([-0-9]{10})_.*","\\1",basename(files_NA[which(gsub("_.*","",bas
 unique(gsub("RC6_([-0-9]{10})_.*","\\1",basename(files_NA[which(gsub("_.*","",basename(files_NA)) == "RC6")])))
 
 
+#Dates - 'B' Sites
+unique(gsub("BC1_([-0-9]{10})_.*","\\1",basename(files_NA[which(gsub("_.*","",basename(files_NA)) == "BC1")])))
+unique(gsub("BC2_([-0-9]{10})_.*","\\1",basename(files_NA[which(gsub("_.*","",basename(files_NA)) == "BC2")])))
+unique(gsub("BN1_([-0-9]{10})_.*","\\1",basename(files_NA[which(gsub("_.*","",basename(files_NA)) == "BN1")])))
+unique(gsub("BN2_([-0-9]{10})_.*","\\1",basename(files_NA[which(gsub("_.*","",basename(files_NA)) == "BN2")])))
+unique(gsub("BN3_([-0-9]{10})_.*","\\1",basename(files_NA[which(gsub("_.*","",basename(files_NA)) == "BN3")])))
+unique(gsub("BN4_([-0-9]{10})_.*","\\1",basename(files_NA[which(gsub("_.*","",basename(files_NA)) == "BN4")])))
+unique(gsub("BN5_([-0-9]{10})_.*","\\1",basename(files_NA[which(gsub("_.*","",basename(files_NA)) == "BN5")])))
+unique(gsub("BN6_([-0-9]{10})_.*","\\1",basename(files_NA[which(gsub("_.*","",basename(files_NA)) == "BN6")])))
+
+unique(gsub("BS1_([-0-9]{10})_.*","\\1",basename(files_NA[which(gsub("_.*","",basename(files_NA)) == "BS1")])))
+unique(gsub("BS2_([-0-9]{10})_.*","\\1",basename(files_NA[which(gsub("_.*","",basename(files_NA)) == "BS2")])))
+unique(gsub("BS3_([-0-9]{10})_.*","\\1",basename(files_NA[which(gsub("_.*","",basename(files_NA)) == "BS3")])))
+unique(gsub("BS4_([-0-9]{10})_.*","\\1",basename(files_NA[which(gsub("_.*","",basename(files_NA)) == "BS4")])))
+unique(gsub("BS5_([-0-9]{10})_.*","\\1",basename(files_NA[which(gsub("_.*","",basename(files_NA)) == "BS5")])))
+unique(gsub("BS6_([-0-9]{10})_.*","\\1",basename(files_NA[which(gsub("_.*","",basename(files_NA)) == "BS6")])))
+unique(gsub("BS7_([-0-9]{10})_.*","\\1",basename(files_NA[which(gsub("_.*","",basename(files_NA)) == "BS7")])))
+unique(gsub("BS8_([-0-9]{10})_.*","\\1",basename(files_NA[which(gsub("_.*","",basename(files_NA)) == "BS8")])))
+unique(gsub("BS9_([-0-9]{10})_.*","\\1",basename(files_NA[which(gsub("_.*","",basename(files_NA)) == "BS9")])))
+unique(gsub("BS10_([-0-9]{10})_.*","\\1",basename(files_NA[which(gsub("_.*","",basename(files_NA)) == "BS10")])))
+
 
 #1000 tz files - why do these have 1000 as the UTC offset when most other files have 1100 (even when incorrect)?
 files_1000 <- files[which(tzs == "1000")]

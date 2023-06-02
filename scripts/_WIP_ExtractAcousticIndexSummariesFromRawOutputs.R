@@ -39,6 +39,8 @@ for (site in 1:length(siteDirectories)) {
     #Manually adjust time to UTC using filename and UTC offset before converting to Sydney time
     data$info$Time <- lubridate::with_tz(lubridate::force_tz(data$info$Time - (3600*as.numeric(gsub("([0-9]{2}).*","\\1",data$info$TZ))), "UTC"), "Australia/Sydney")
     
+    #Adjust date to match the time (it may have changed due to fixing time based on UTC above)
+    data$info$Date <- as.Date(data$info$Time, tz = "Australia/Sydney")
     
     ####################
     #AP Summary Indices#
@@ -110,6 +112,9 @@ for (site in 1:length(siteDirectories)) {
     #R Indices#
     ###########
     data_R <- readRDS(gsub("Indices_AP", "Indices_R", file))
+    
+    #Currently dropping Acoustic indices which are for multiple frequency bins
+    data_R <- data_R %>% select(-c(ACI_soundecology_f, ADI_values, ADI_names, SoundScapeSpec))
     
     data_R <- data.frame(Site = data$info$Site,
                          Date = data$info$Date,

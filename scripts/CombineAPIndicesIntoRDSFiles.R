@@ -18,7 +18,7 @@ for (dir in dirs) {
   
   #add an 'info' element to list that contains site, date, time and timezone information
   indices[["info"]] <- list(Site = gsub("[A-Z]:/([A-Z0-9]{2,4})/.*", "\\1", dir),
-                            Date = as.Date(gsub("[A-Z]:/([A-Z0-9]{2,4})/([0-9]{8})_.*", "\\2", dir), "%Y%m%d"),
+                            Date = as.Date(gsub("[A-Z]:/([A-Z0-9]{2,4})/([0-9]{8})_.*", "\\2", dir), "%Y%m%d"), #this doesn't work on a handful of files with different naming structure (possible fix is to add '.*' before second group capture - need to test)
                             Time = case_when(
                               grepl("T[0-9]{6}", basename(csvFiles[1])) ~ strptime(paste0(gsub(".*([0-9]{8}).*", "\\1", basename(csvFiles[1])), gsub(".*T([0-9]{6}).*", "\\1", basename(csvFiles[1]))), "%Y%m%d%H%M%S"),
                               grepl(".*[0-9]{8}_[0-9]{6}_", basename(csvFiles[1])) ~ strptime(paste0(gsub(".*([0-9]{8}).*", "\\1", basename(csvFiles[1])), gsub(".*_([0-9]{6})_.*", "\\1", basename(csvFiles[1]))), "%Y%m%d%H%M%S")
