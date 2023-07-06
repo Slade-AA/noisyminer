@@ -46,7 +46,7 @@ biodiversity_R1R2combined_SurveyDates <- biodiversity_R1R2combined_SurveyDates %
 
 #sites <- c("G1", "G2", "G3")
 #sites <- c("RC1")
-sites <- gsub(".RDS", "", list.files(path = "E:/_combinedIndices/", pattern = "*.RDS$"))
+sites <- gsub(".RDS", "", list.files(path = "D:/_combinedIndices/", pattern = "*.RDS$"))
 
 #Initialise data frames for storing aggregates of acoustic indices for different 'time of day' periods
 dawnSummary <- data.frame()
@@ -55,12 +55,12 @@ solarNoonSummary <- data.frame()
 daySummary <- data.frame()
 
 for (site in sites) {
-  indexSet <- "Indices_Summary" #Do I repeat this for each set of acoustic indices?
+  indexSet <- "Indices_FeatureReduction" #Do I repeat this for each set of acoustic indices?
   #for (indexSet in c("Indices_Summary", "Indices_SpectralAggregated", "Indices_FeatureReduction")) {}
   
   #Read in acoustic indices for specific site
   #SiteIndices <- readRDS(paste0("C:/Users/jc696551/Downloads/", site, ".RDS"))
-  SiteIndices <- readRDS(paste0("E:/_combinedIndices/", site, ".RDS"))
+  SiteIndices <- readRDS(paste0("D:/_combinedIndices/", site, ".RDS"))
   
   
   indicesToSummarise <- colnames(SiteIndices[[indexSet]])[-c(1:3)] #create vector of acoustic index names that will be summarised below
@@ -220,4 +220,4 @@ allSummary <- bind_rows(dawnSummary,
 allSummary <- left_join(allSummary,
                         biodiversity_R1R2combined_SurveyDates %>% select(SurveyIDR12, Mean20m:Threshold40m))
 
-saveRDS(allSummary, paste0("outputs/allSummary_", Sys.Date()))
+saveRDS(allSummary, paste0("outputs/Indices_FeatureReduction_", Sys.Date()))
