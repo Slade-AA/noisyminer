@@ -330,13 +330,14 @@ performance::check_model(model_lme2)
 #Random Forest ----
 library(caret)
 library(randomForest)
+library(mgcv)
 library(yardstick)
 
 prediction_results <- data.frame()
 
-for (audioDays in 1:8) {
+for (numDays in seq(1, 8)) {
   
-  rf_data <- allSummary %>% filter(type == 'dawn' & audioDays == audioDays)
+  rf_data <- allSummary %>% filter(type == 'dawn' & audioDays == numDays)
   
   for (i in 1:10) {
     
@@ -345,8 +346,8 @@ for (audioDays in 1:8) {
     #split into train and test & filter to acoustic index columns
     train <- createDataPartition(rf_data$Detected40, p = 0.8, list = F)
     
-    trainData <- rf_data[train,] %>% dplyr::select(c('Detected40', 'Site', ends_with(c("median")))) # 
-    testData <- rf_data[-train,] %>% dplyr::select(c('Detected40', 'Site', ends_with(c("median")))) #'Site', 
+    trainData <- rf_data[train,] %>% dplyr::select(c('Detected40', ends_with(c("median")))) # 
+    testData <- rf_data[-train,] %>% dplyr::select(c('Detected40', ends_with(c("median")))) #'Site', 
     
     fit_control <- trainControl(method = "cv",
                                 number = 10)
@@ -367,48 +368,168 @@ for (audioDays in 1:8) {
     #observed and predicted
     obs_pred_rf <- data.frame(observed = testData$Detected40, predicted = predictions_rf)
     
+    obs_pred_rf_train <- data.frame(observed = rf_model$trainingData$.outcome, predicted = rf_model$finalModel$predicted)
+    
     prediction_results <- bind_rows(prediction_results,
                                     cbind(type = 'dawn',
-                                          audioDays = audioDays,
-                                          method = "rf", 
+                                          audioDays = numDays,
+                                          method = "rf",
+                                          performance = "test",
                                           DescTools::CCC(obs_pred_rf$observed, obs_pred_rf$predicted)$rho.c,
                                           MAE = MAE(obs_pred_rf$predicted, obs_pred_rf$observed),
-                                          RMSE = RMSE(obs_pred_rf$predicted, obs_pred_rf$observed)))
+                                          RMSE = RMSE(obs_pred_rf$predicted, obs_pred_rf$observed)),
+                                    cbind(type = 'dawn',
+                                          audioDays = numDays,
+                                          method = "rf", 
+                                          performance = "train",
+                                          DescTools::CCC(obs_pred_rf_train$observed, obs_pred_rf_train$predicted)$rho.c,
+                                          MAE = MAE(obs_pred_rf_train$predicted, obs_pred_rf_train$observed),
+                                          RMSE = RMSE(obs_pred_rf_train$predicted, obs_pred_rf_train$observed)))
     
     
     
-    #lme model?
+    #glm model - all features
+    glm_model <- train(Detected40 ~ .,
+                             data = trainData,
+                             method = "glm",
+                             family = "poisson",
+                             trControl = trainControl(method = "none"))
     
-    #compare to GAM
-    gam_model <- gam(Detected40 ~ s(Activity_median) + 
-                       s(EventsPerSecond_median) + 
-                       s(HighFreqCover_median) + 
-                       s(MidFreqCover_median) + 
-                       s(LowFreqCover_median) + 
-                       s(AcousticComplexity_median) + 
-                       s(TemporalEntropy_median) + 
-                       s(ClusterCount_median) + 
-                       s(Ndsi_median) + 
-                       s(SptDensity_median) + s(Site, bs = "re"), 
-                     data = trainData)
+    predictions_glm <- glm_model %>% predict(testData)
+    obs_pred_glm <- data.frame(observed = testData$Detected40, predicted = predictions_glm)
+    
+    obs_pred_glm_train <- data.frame(observed = glm_model$finalModel$y, predicted = glm_model$finalModel$fitted.values)
+    
+    prediction_results <- bind_rows(prediction_results,
+                                    cbind(type = 'dawn',
+                                          audioDays = numDays,
+                                          method = "glm",
+                                          performance = "test", 
+                                          DescTools::CCC(obs_pred_glm$observed, obs_pred_glm$predicted)$rho.c,
+                                          MAE = MAE(obs_pred_glm$predicted, obs_pred_glm$observed),
+                                          RMSE = RMSE(obs_pred_glm$predicted, obs_pred_glm$observed)),
+                                    cbind(type = 'dawn',
+                                          audioDays = numDays,
+                                          method = "glm",
+                                          performance = "train", 
+                                          DescTools::CCC(obs_pred_glm_train$observed, obs_pred_glm_train$predicted)$rho.c,
+                                          MAE = MAE(obs_pred_glm_train$predicted, obs_pred_glm_train$observed),
+                                          RMSE = RMSE(obs_pred_glm_train$predicted, obs_pred_glm_train$observed)))
+    
+    #glm model - reduced features
+    
+    glm_model_reduced <- train(Detected40 ~ HighFreqCover_median + 
+                                 MidFreqCover_median + 
+                                 AcousticComplexity_median + 
+                                 ClusterCount_median + 
+                                 Ndsi_median + 
+                                 SptDensity_median,
+                               data = trainData,
+                               method = "glm",
+                               family = "poisson",
+                               trControl = trainControl(method = "none"))
+    
+    predictions_glm_reduced <- glm_model_reduced %>% predict(testData)
+    obs_pred_glm_reduced <- data.frame(observed = testData$Detected40, predicted = predictions_glm_reduced)
+    
+    obs_pred_glm_reduced_train <- data.frame(observed = glm_model_reduced$finalModel$y, predicted = glm_model_reduced$finalModel$fitted.values)
+    
+    prediction_results <- bind_rows(prediction_results,
+                                    cbind(type = 'dawn',
+                                          audioDays = numDays,
+                                          method = "glm_reduced",
+                                          performance = "test", 
+                                          DescTools::CCC(obs_pred_glm_reduced$observed, obs_pred_glm_reduced$predicted)$rho.c,
+                                          MAE = MAE(obs_pred_glm_reduced$predicted, obs_pred_glm_reduced$observed),
+                                          RMSE = RMSE(obs_pred_glm_reduced$predicted, obs_pred_glm_reduced$observed)),
+                                    cbind(type = 'dawn',
+                                          audioDays = numDays,
+                                          method = "glm_reduced",
+                                          performance = "train", 
+                                          DescTools::CCC(obs_pred_glm_reduced_train$observed, obs_pred_glm_reduced_train$predicted)$rho.c,
+                                          MAE = MAE(obs_pred_glm_reduced_train$predicted, obs_pred_glm_reduced_train$observed),
+                                          RMSE = RMSE(obs_pred_glm_reduced_train$predicted, obs_pred_glm_reduced_train$observed)))
+    
+    #GAM
+    
+    gam_model <- train(Detected40 ~ .,
+                       data = trainData,
+                       method = "gam",
+                       family = "poisson",
+                       trControl = trainControl(method = "none"),
+                       tuneGrid = data.frame(method = "GCV.Cp", select = FALSE))
     
     predictions_gam <- gam_model %>% predict(testData)
     obs_pred_gam <- data.frame(observed = testData$Detected40, predicted = predictions_gam)
     
+    obs_pred_gam_train <- data.frame(observed = gam_model$finalModel$y, predicted = gam_model$finalModel$fitted.values)
+    
     prediction_results <- bind_rows(prediction_results,
                                     cbind(type = 'dawn',
-                                          audioDays = audioDays,
-                                          method = "gam", 
+                                          audioDays = numDays,
+                                          method = "gam",
+                                          performance = "test", 
                                           DescTools::CCC(obs_pred_gam$observed, obs_pred_gam$predicted)$rho.c,
                                           MAE = MAE(obs_pred_gam$predicted, obs_pred_gam$observed),
-                                          RMSE = RMSE(obs_pred_gam$predicted, obs_pred_gam$observed)))
+                                          RMSE = RMSE(obs_pred_gam$predicted, obs_pred_gam$observed)),
+                                    cbind(type = 'dawn',
+                                          audioDays = numDays,
+                                          method = "gam",
+                                          performance = "train", 
+                                          DescTools::CCC(obs_pred_gam_train$observed, obs_pred_gam_train$predicted)$rho.c,
+                                          MAE = MAE(obs_pred_gam_train$predicted, obs_pred_gam_train$observed),
+                                          RMSE = RMSE(obs_pred_gam_train$predicted, obs_pred_gam_train$observed)))
+    
+    #GAM - reduced
+    gam_model_reduced <- train(Detected40 ~ HighFreqCover_median + 
+                                 MidFreqCover_median + 
+                                 AcousticComplexity_median + 
+                                 ClusterCount_median + 
+                                 Ndsi_median + 
+                                 SptDensity_median,
+                               data = trainData,
+                               method = "gam",
+                               family = "poisson",
+                               trControl = trainControl(method = "none"),
+                               tuneGrid = data.frame(method = "GCV.Cp", select = FALSE))
+    
+    predictions_gam_reduced <- gam_model_reduced %>% predict(testData)
+    obs_pred_gam_reduced <- data.frame(observed = testData$Detected40, predicted = predictions_gam_reduced)
+    
+    obs_pred_gam_reduced_train <- data.frame(observed = gam_model_reduced$finalModel$y, predicted = gam_model_reduced$finalModel$fitted.values)
+    
+    prediction_results <- bind_rows(prediction_results,
+                                    cbind(type = 'dawn',
+                                          audioDays = numDays,
+                                          method = "gam_reduced",
+                                          performance = "test", 
+                                          DescTools::CCC(obs_pred_gam_reduced$observed, obs_pred_gam_reduced$predicted)$rho.c,
+                                          MAE = MAE(obs_pred_gam_reduced$predicted, obs_pred_gam_reduced$observed),
+                                          RMSE = RMSE(obs_pred_gam_reduced$predicted, obs_pred_gam_reduced$observed)),
+                                    cbind(type = 'dawn',
+                                          audioDays = numDays,
+                                          method = "gam_reduced",
+                                          performance = "train", 
+                                          DescTools::CCC(obs_pred_gam_reduced_train$observed, obs_pred_gam_reduced_train$predicted)$rho.c,
+                                          MAE = MAE(obs_pred_gam_reduced_train$predicted, obs_pred_gam_reduced_train$observed),
+                                          RMSE = RMSE(obs_pred_gam_reduced_train$predicted, obs_pred_gam_reduced_train$observed)))
     
   }
 }
 
 
-ggplot(prediction_results, aes(x = factor(audioDays, levels = c(1,2,3,4)), y = MAE, fill = method)) + 
+ggplot(prediction_results, aes(x = factor(audioDays, levels = c(1,2,3,4,5,6,7,8)), y = MAE, fill = method)) + 
   geom_boxplot() +
+  facet_wrap(~performance) +
+  theme_bw()
+
+ggplot(prediction_results %>% filter(performance == 'train'), aes(x = factor(audioDays, levels = c(1,2,3,4,5,6,7,8)), y = MAE, fill = method)) + 
+  geom_boxplot() +
+  theme_bw()
+
+ggplot(prediction_results, aes(x = factor(audioDays, levels = c(1,2,3,4,5,6,7,8)), y = MAE, fill = performance)) + 
+  geom_boxplot() +
+  facet_wrap(~method) +
   theme_bw()
 
 
