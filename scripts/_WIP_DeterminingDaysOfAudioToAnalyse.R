@@ -55,7 +55,7 @@ solarNoonSummary <- data.frame()
 daySummary <- data.frame()
 
 for (site in sites) {
-  indexSet <- "Indices_FeatureReduction" #Do I repeat this for each set of acoustic indices?
+  indexSet <- "Indices_SpectralAggregated" #Do I repeat this for each set of acoustic indices?
   #for (indexSet in c("Indices_Summary", "Indices_SpectralAggregated", "Indices_FeatureReduction")) {}
   
   #Read in acoustic indices for specific site
@@ -220,4 +220,4 @@ allSummary <- bind_rows(dawnSummary,
 allSummary <- left_join(allSummary,
                         biodiversity_R1R2combined_SurveyDates %>% select(SurveyIDR12, Mean20m:Threshold40m))
 
-saveRDS(allSummary, paste0("outputs/Indices_FeatureReduction_", Sys.Date()))
+saveRDS(allSummary, paste0("outputs/Indices_SpectralAggregate_", Sys.Date()))
