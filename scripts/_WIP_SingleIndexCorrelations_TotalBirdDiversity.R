@@ -331,10 +331,11 @@ performance::check_model(model_lme2)
 library(caret)
 library(randomForest)
 library(mgcv)
+library(nnet)
 library(yardstick)
 
 prediction_results <- data.frame()
-
+set.seed(1234)
 for (numDays in seq(1, 8)) {
   
   rf_data <- allSummary %>% filter(type == 'dawn' & audioDays == numDays)
@@ -387,6 +388,44 @@ for (numDays in seq(1, 8)) {
                                           RMSE = RMSE(obs_pred_rf_train$predicted, obs_pred_rf_train$observed)))
     
     
+    #nnet model
+    fit_control <- trainControl(method = "cv",
+                                number = 10)
+    
+    nnet_model <- train(Detected40 ~ .,
+                        data = trainData,
+                        method = "nnet",
+                        metric = "RMSE",
+                        preProcess = c('center', 'scale'),
+                        trControl = fit_control,
+                        linout = 1,
+                        trace = F,
+                        tuneGrid = expand.grid(decay = c(0.5, 0.1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6, 1e-7),
+                                               size = c(3, 4, 5, 6, 7, 8, 9, 10, 11)))
+    
+    #Make predictions on test set
+    predictions_nnet <- nnet_model %>% predict(testData)
+    
+    #observed and predicted
+    obs_pred_nnet <- data.frame(observed = testData$Detected40, predicted = predictions_nnet)
+    
+    obs_pred_nnet_train <- data.frame(observed = nnet_model$trainingData$.outcome, predicted = nnet_model$finalModel$fitted.values)
+    
+    prediction_results <- bind_rows(prediction_results,
+                                    cbind(type = 'dawn',
+                                          audioDays = numDays,
+                                          method = "nnet",
+                                          performance = "test",
+                                          DescTools::CCC(obs_pred_nnet$observed, obs_pred_nnet$predicted)$rho.c,
+                                          MAE = MAE(obs_pred_nnet$predicted, obs_pred_nnet$observed),
+                                          RMSE = RMSE(obs_pred_nnet$predicted, obs_pred_nnet$observed)),
+                                    cbind(type = 'dawn',
+                                          audioDays = numDays,
+                                          method = "nnet", 
+                                          performance = "train",
+                                          DescTools::CCC(obs_pred_nnet_train$observed, obs_pred_nnet_train$predicted)$rho.c,
+                                          MAE = MAE(obs_pred_nnet_train$predicted, obs_pred_nnet_train$observed),
+                                          RMSE = RMSE(obs_pred_nnet_train$predicted, obs_pred_nnet_train$observed)))
     
     #glm model - all features
     glm_model <- train(Detected40 ~ .,
