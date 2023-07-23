@@ -118,6 +118,8 @@ ggplot(data = bootCor_results %>% filter(SummaryMethod == 'median', CorrelationM
         panel.grid.minor = element_blank())
 
 
+
+
 # Multi-index models ----
 
 #Model Mean correlation for each index by number of audio days?
@@ -325,6 +327,8 @@ model_lme2 <- glmer(Detected40 ~
                     family = poisson())
 summary(model_lme2)
 performance::check_model(model_lme2)
+
+
 
 
 #Random Forest ----
@@ -576,6 +580,12 @@ ggplot(prediction_results, aes(x = factor(audioDays, levels = c(1,2,3,4,5,6,7,8)
 ggplot(data = prediction_results, aes(x = method, y = est)) + 
   geom_boxplot() +
   theme_bw()
+
+
+
+
+
+
 
 
 model_gamm <- gamm(Detected40 ~ s(AcousticComplexity_median) + s(EventsPerSecond_median) + s(MidFreqCover_median) + s(Ndsi_median), random = list(Site=~1), 
