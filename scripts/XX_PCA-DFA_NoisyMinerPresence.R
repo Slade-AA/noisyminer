@@ -15,6 +15,7 @@ Indices_Summary <- readRDS(file = "outputs/Indices_Summary_2023-07-18")
 #Analysis Programs spectral indices (ACI, CVR, ENT, PMN) aggregated across different frequency bands
 Indices_SpectralAggregated <- readRDS(file = "outputs/Indices_SpectralAggregated_2023-07-18")
 
+pal <- c("#303248", "#ddb02a") #Colours extracted from picture of Noisy miner
 
 # PCA plots per Time of Day ----
 
@@ -30,17 +31,27 @@ for (measure in c("NMPresent", "Threshold20m", "Threshold40m")) {
       PCA <- prcomp(data[2:ncol(data)], scale = TRUE)
       
       PCAPlots[[paste0(timeDay, "_", numDays)]] <- fviz_pca_ind(PCA, habillage = data[[measure]], label = "none", addEllipses = TRUE) + 
-        scale_color_brewer(palette = "Dark2") + 
+        scale_color_manual(values = pal) + 
+        scale_fill_manual(values = pal) +
         theme_minimal() +
-        theme(plot.title = element_blank())
+        theme(plot.title = element_blank(),
+              legend.direction = "horizontal")
     }
     
-    plot_grid(plotlist = PCAPlots,
+    PCA_legend <- get_legend(PCAPlots[[1]])
+    
+    plot_grid(PCAPlots[[1]] + rremove("legend"),
+              PCAPlots[[2]] + rremove("legend"),
+              PCAPlots[[3]] + rremove("legend"),
+              PCAPlots[[4]] + rremove("legend"),
               labels = c("A - dawn", "B - solarNoon", "C - dusk", "D - day"),
               hjust = 0, label_x = 0.1) %>% 
+      plot_grid(PCA_legend,
+                ncol = 1,
+                rel_heights = c(1,0.1)) %>% 
       annotate_figure(top = paste0("Summary Indices - ", measure, " - ", numDays, "days")) %>% 
       ggsave(filename = paste0("outputs/figures_2023/pca/SummaryIndices/", "Summary Indices - ", measure, " - ", numDays, "days", ".png"),
-             bg = "white")
+             bg = "white", width = 6.5, height = 6.7)
   }
 }
 
@@ -56,17 +67,27 @@ for (measure in c("NMPresent", "Threshold20m", "Threshold40m")) {
       PCA <- prcomp(data[2:ncol(data)], scale = TRUE)
       
       PCAPlots[[paste0(timeDay, "_", numDays)]] <- fviz_pca_ind(PCA, habillage = data[[measure]], label = "none", addEllipses = TRUE) + 
-        scale_color_brewer(palette = "Dark2") + 
+        scale_color_manual(values = pal) + 
+        scale_fill_manual(values = pal) +
         theme_minimal() +
-        theme(plot.title = element_blank())
+        theme(plot.title = element_blank(),
+              legend.direction = "horizontal")
     }
     
-    plot_grid(plotlist = PCAPlots,
+    PCA_legend <- get_legend(PCAPlots[[1]])
+    
+    plot_grid(PCAPlots[[1]] + rremove("legend"),
+              PCAPlots[[2]] + rremove("legend"),
+              PCAPlots[[3]] + rremove("legend"),
+              PCAPlots[[4]] + rremove("legend"),
               labels = c("A - dawn", "B - solarNoon", "C - dusk", "D - day"),
               hjust = 0, label_x = 0.1) %>% 
+      plot_grid(PCA_legend,
+                ncol = 1,
+                rel_heights = c(1,0.1)) %>% 
       annotate_figure(top = paste0("Spectral Aggregate Indices - ", measure, " - ", numDays, "days")) %>% 
       ggsave(filename = paste0("outputs/figures_2023/pca/SpectralAggregateIndices/", "Spectral Aggregate Indices - ", measure, " - ", numDays, "days", ".png"),
-             bg = "white")
+             bg = "white", width = 6.5, height = 6.7)
   }
 }
 

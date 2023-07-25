@@ -18,9 +18,9 @@ ggplot(data, aes(x = Threshold40m, y = ACI_Band_1.5_4.0_median)) +
   ggdist::stat_halfeye(aes(color = Threshold40m,
                            fill = after_scale(lighten(color, 0.5))),
                        adjust = .5, 
-                       width = .6, 
+                       width = .4, 
                        .width = 0, 
-                       justification = -.3, 
+                       justification = -.4, 
                        point_colour = NA) + 
   geom_boxplot(aes(colour = Threshold40m, 
                    colour = after_scale(darken(colour, 0.2, space = "HLS")),
@@ -41,7 +41,7 @@ ggplot(data, aes(x = Threshold40m, y = ACI_Band_1.5_4.0_median)) +
                    color = after_scale(darken(color, .3, space = "HLS"))),
                size = 4,
                hjust = 0) +
-  stat_compare_means(label.x.npc = 0.5, hjust = 0.3) +
+  stat_compare_means(label.x.npc = 0.45, hjust = 0.3) +
   scale_color_manual(values = pal, guide = "none") +
   scale_fill_manual(values = pal, guide = "none") +
   labs(x = "Threshold40m") +
