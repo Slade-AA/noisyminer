@@ -55,7 +55,7 @@ solarNoonSummary <- data.frame()
 daySummary <- data.frame()
 
 for (site in sites) {
-  indexSet <- "Indices_SpectralAggregated" #Do I repeat this for each set of acoustic indices?
+  indexSet <- "Indices_R" #Do I repeat this for each set of acoustic indices?
   #for (indexSet in c("Indices_Summary", "Indices_SpectralAggregated", "Indices_FeatureReduction")) {}
   
   #Read in acoustic indices for specific site
@@ -67,6 +67,14 @@ for (site in sites) {
   
   #Join suntimes to acoustic indices
   SiteIndices[[indexSet]] <- left_join(SiteIndices[[indexSet]], suntimes)
+  
+  #Remove potential outliers - keep middle 99% of values - i.e., remove 0.005
+  quantiles <- lapply(SiteIndices[[indexSet]][indicesToSummarise], function (x) quantile(x, probs = c(0.005, 0.995), na.rm = TRUE))
+  
+  for (f in 1:length(quantiles)) {
+    SiteIndices[[indexSet]] <- SiteIndices[[indexSet]] %>% 
+      filter((!!sym(names(quantiles[f]))) > quantiles[[f]][[1]] & (!!sym(names(quantiles[f]))) < quantiles[[f]][[2]])
+  }
   
   
   surveys_Site <- biodiversity_R1R2combined_SurveyDates[biodiversity_R1R2combined_SurveyDates$SiteID == site,]
@@ -88,7 +96,7 @@ for (site in sites) {
     #Determine the number of days within 2 that have day (sunrise to sunset) recordings (at least 75% of minutes)
     audioDaysWithin2days_day <- audioDaysWithin2days[which(sapply(audioDaysWithin2days, function(x) nrow(SiteIndices[[indexSet]][SiteIndices[[indexSet]]$Date == x & SiteIndices[[indexSet]]$Time >= (SiteIndices[[indexSet]]$sunrise) & SiteIndices[[indexSet]]$Time < (SiteIndices[[indexSet]]$sunset),])) >= sapply(audioDaysWithin2days, function(x) ((period_to_seconds(hm(gsub("[0-9]{4}\\-[0-9]{2}\\-[0-9]{2} ([0-9\\:]{5})\\:[0-9]{2}$","\\1",SiteIndices[[indexSet]]$sunset[SiteIndices[[indexSet]]$Date == x][1])) - hm(gsub("[0-9]{4}\\-[0-9]{2}\\-[0-9]{2} ([0-9\\:]{5})\\:[0-9]{2}$","\\1",SiteIndices[[indexSet]]$sunrise[SiteIndices[[indexSet]]$Date == x][1])))/60)*0.75)))]
     
-    
+    quantiles <- lapply(SiteIndices[[indexSet]][indicesToSummarise], function (x) quantile(x, probs = c(0.01, 0.99)))
     
     #Dawn Summary
     if (length(audioDaysWithin2days_dawn) > 0) {
@@ -220,4 +228,4 @@ allSummary <- bind_rows(dawnSummary,
 allSummary <- left_join(allSummary,
                         biodiversity_R1R2combined_SurveyDates %>% select(SurveyIDR12, Mean20m:Threshold40m))
 
-saveRDS(allSummary, paste0("outputs/Indices_SpectralAggregate_", Sys.Date()))
+saveRDS(allSummary, paste0("outputs/", indexSet, "_", Sys.Date()))
