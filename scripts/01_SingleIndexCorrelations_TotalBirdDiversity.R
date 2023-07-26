@@ -42,7 +42,7 @@ pb = txtProgressBar(min = 0, max = 4*4*8*2*2*length(colnames(select(Indices_Summ
 
 for (measure in c('Mean20m', 'Mean40m', 'Detected20', 'Detected40')) {
   for (timeperiod in c('dawn', 'solarNoon', 'dusk', 'day')) {
-    for (numDays in seq(1, 8)) { #9 and 10 have too few data points for comparison I think
+    for (numDays in seq(1, 9)) { #9 and 10 have too few data points for comparison I think
       for (summaryMethod in c("mean", "median")) {
         for (correlationMethod in c("spearman", "pearson")) {
           for (index in colnames(select(Indices_Summary, ends_with(c(summaryMethod))))) {
@@ -103,7 +103,7 @@ Plot_Indices_Summary_Mean20m <- ggplot(data = bootCor_results_summary %>%
   facet_wrap(~Index) +
   labs(x = "Number of Recording Days", y = "Mean Correlation (+- 95% CI)") +
   scale_x_continuous(breaks = seq(1, 10)) +
-  scale_y_continuous(limits = c(-0.8, 0.8), breaks = seq(-0.8, 0.8, 0.2)) +
+  scale_y_continuous(limits = c(-0.86, 0.86), breaks = seq(-0.8, 0.8, 0.2)) +
   scale_color_viridis_d(name = "Time of Day") +
   theme_bw() +
   theme(legend.position = c(0.8, 0.15),
@@ -124,7 +124,7 @@ Plot_Indices_Summary_Mean40m <- ggplot(data = bootCor_results_summary %>%
   facet_wrap(~Index) +
   labs(x = "Number of Recording Days", y = "Mean Correlation (+- 95% CI)") +
   scale_x_continuous(breaks = seq(1, 10)) +
-  scale_y_continuous(limits = c(-0.8, 0.8), breaks = seq(-0.8, 0.8, 0.2)) +
+  scale_y_continuous(limits = c(-0.86, 0.86), breaks = seq(-0.8, 0.8, 0.2)) +
   scale_color_viridis_d(name = "Time of Day") +
   theme_bw() +
   theme(legend.position = c(0.8, 0.15),
@@ -145,7 +145,7 @@ Plot_Indices_Summary_Detected20 <- ggplot(data = bootCor_results_summary %>%
   facet_wrap(~Index) +
   labs(x = "Number of Recording Days", y = "Mean Correlation (+- 95% CI)") +
   scale_x_continuous(breaks = seq(1, 10)) +
-  scale_y_continuous(limits = c(-0.8, 0.8), breaks = seq(-0.8, 0.8, 0.2)) +
+  scale_y_continuous(limits = c(-0.86, 0.86), breaks = seq(-0.8, 0.8, 0.2)) +
   scale_color_viridis_d(name = "Time of Day") +
   theme_bw() +
   theme(legend.position = c(0.8, 0.15),
@@ -166,7 +166,7 @@ Plot_Indices_Summary_Detected40 <- ggplot(data = bootCor_results_summary %>%
   facet_wrap(~Index) +
   labs(x = "Number of Recording Days", y = "Mean Correlation (+- 95% CI)") +
   scale_x_continuous(breaks = seq(1, 10)) +
-  scale_y_continuous(limits = c(-0.8, 0.8), breaks = seq(-0.8, 0.8, 0.2)) +
+  scale_y_continuous(limits = c(-0.86, 0.86), breaks = seq(-0.8, 0.8, 0.2)) +
   scale_color_viridis_d(name = "Time of Day") +
   theme_bw() +
   theme(legend.position = c(0.8, 0.15),
@@ -191,12 +191,12 @@ pb = txtProgressBar(min = 0, max = 4*4*8*2*2*length(colnames(select(Indices_R, e
 
 for (measure in c('Mean20m', 'Mean40m', 'Detected20', 'Detected40')) {
   for (timeperiod in c('dawn', 'solarNoon', 'dusk', 'day')) {
-    for (numDays in seq(1, 8)) { #9 and 10 have too few data points for comparison I think
+    for (numDays in seq(1, 9)) { #9 and 10 have too few data points for comparison I think
       for (summaryMethod in c("mean", "median")) {
         for (correlationMethod in c("spearman", "pearson")) {
           for (index in colnames(select(Indices_R, ends_with(c(summaryMethod))))[-c(2,3,4,5)]) {
             set.seed(1234)#set seed for reproducibility
-            bootResults <- boot(Indices_Summary[Indices_R$type == timeperiod & Indices_R$audioDays == numDays,], 
+            bootResults <- boot(Indices_R[Indices_R$type == timeperiod & Indices_R$audioDays == numDays,], 
                                 statistic = function(data, i) {
                                   cor(data[i, measure], data[i, index], method=correlationMethod)
                                 },
@@ -246,7 +246,7 @@ Plot_Indices_R_Mean20m <- ggplot(data = bootCor_results_R %>%
   facet_wrap(~Index) +
   labs(x = "Number of Recording Days", y = "Mean Correlation (+- 95% CI)") +
   scale_x_continuous(breaks = seq(1, 10)) +
-  scale_y_continuous(limits = c(-0.8, 0.8), breaks = seq(-0.8, 0.8, 0.2)) +
+  scale_y_continuous(limits = c(-0.86, 0.86), breaks = seq(-0.8, 0.8, 0.2)) +
   scale_color_viridis_d(name = "Time of Day") +
   theme_bw() +
   theme(legend.position = c(0.8, 0.15),
@@ -267,7 +267,7 @@ Plot_Indices_R_Mean40m <- ggplot(data = bootCor_results_R %>%
   facet_wrap(~Index) +
   labs(x = "Number of Recording Days", y = "Mean Correlation (+- 95% CI)") +
   scale_x_continuous(breaks = seq(1, 10)) +
-  scale_y_continuous(limits = c(-0.8, 0.8), breaks = seq(-0.8, 0.8, 0.2)) +
+  scale_y_continuous(limits = c(-0.86, 0.86), breaks = seq(-0.8, 0.8, 0.2)) +
   scale_color_viridis_d(name = "Time of Day") +
   theme_bw() +
   theme(legend.position = c(0.8, 0.15),
@@ -288,7 +288,7 @@ Plot_Indices_R_Detected20 <- ggplot(data = bootCor_results_R %>%
   facet_wrap(~Index) +
   labs(x = "Number of Recording Days", y = "Mean Correlation (+- 95% CI)") +
   scale_x_continuous(breaks = seq(1, 10)) +
-  scale_y_continuous(limits = c(-0.8, 0.8), breaks = seq(-0.8, 0.8, 0.2)) +
+  scale_y_continuous(limits = c(-0.86, 0.86), breaks = seq(-0.8, 0.8, 0.2)) +
   scale_color_viridis_d(name = "Time of Day") +
   theme_bw() +
   theme(legend.position = c(0.8, 0.15),
@@ -309,7 +309,7 @@ Plot_Indices_R_Detected40 <- ggplot(data = bootCor_results_R %>%
   facet_wrap(~Index) +
   labs(x = "Number of Recording Days", y = "Mean Correlation (+- 95% CI)") +
   scale_x_continuous(breaks = seq(1, 10)) +
-  scale_y_continuous(limits = c(-0.8, 0.8), breaks = seq(-0.8, 0.8, 0.2)) +
+  scale_y_continuous(limits = c(-0.86, 0.86), breaks = seq(-0.8, 0.8, 0.2)) +
   scale_color_viridis_d(name = "Time of Day") +
   theme_bw() +
   theme(legend.position = c(0.8, 0.15),
