@@ -7,6 +7,9 @@ library(yardstick) #classification performance metrics
 library(ggpubr)
 library(cowplot)
 
+#Custom pallette
+pal <- c("#303248", "#ddb02a") #Colours extracted from picture of Noisy miner
+
 # Load in summary indices with biodiversity data ----
 
 #Summary indices from Analysis Programs
@@ -15,13 +18,12 @@ Indices_Summary <- readRDS(file = "outputs/Indices_Summary_2023-07-18")
 #Analysis Programs spectral indices (ACI, CVR, ENT, PMN) aggregated across different frequency bands
 Indices_SpectralAggregated <- readRDS(file = "outputs/Indices_SpectralAggregated_2023-07-18")
 
-pal <- c("#303248", "#ddb02a") #Colours extracted from picture of Noisy miner
 
 # PCA plots per Time of Day ----
 
 # ├ Summary Indices ----
 for (measure in c("NMPresent", "Threshold20m", "Threshold40m")) {
-  for (numDays in seq(1,8)) {
+  for (numDays in seq(1,9)) {
     PCAPlots <- list()
     for (timeDay in c('dawn', 'solarNoon', 'dusk', 'day')) {
       data <- Indices_Summary %>% 
@@ -33,6 +35,7 @@ for (measure in c("NMPresent", "Threshold20m", "Threshold40m")) {
       PCAPlots[[paste0(timeDay, "_", numDays)]] <- fviz_pca_ind(PCA, habillage = data[[measure]], label = "none", addEllipses = TRUE) + 
         scale_color_manual(values = pal) + 
         scale_fill_manual(values = pal) +
+        annotate(geom = "text", label = paste0(round(get_eig(PCA)[2,3], 1), "% Variation"), x = Inf, y = -Inf, hjust = 1.1, vjust = -1) +
         theme_minimal() +
         theme(plot.title = element_blank(),
               legend.direction = "horizontal")
@@ -57,7 +60,7 @@ for (measure in c("NMPresent", "Threshold20m", "Threshold40m")) {
 
 # ├ Spectral Aggregate Indices ----
 for (measure in c("NMPresent", "Threshold20m", "Threshold40m")) {
-  for (numDays in seq(1,8)) {
+  for (numDays in seq(1,9)) {
     PCAPlots <- list()
     for (timeDay in c('dawn', 'solarNoon', 'dusk', 'day')) {
       data <- Indices_SpectralAggregated %>% 
@@ -69,6 +72,7 @@ for (measure in c("NMPresent", "Threshold20m", "Threshold40m")) {
       PCAPlots[[paste0(timeDay, "_", numDays)]] <- fviz_pca_ind(PCA, habillage = data[[measure]], label = "none", addEllipses = TRUE) + 
         scale_color_manual(values = pal) + 
         scale_fill_manual(values = pal) +
+        annotate(geom = "text", label = paste0(round(get_eig(PCA)[2,3], 1), "% Variation"), x = Inf, y = -Inf, hjust = 1.1, vjust = -1) +
         theme_minimal() +
         theme(plot.title = element_blank(),
               legend.direction = "horizontal")
@@ -95,14 +99,25 @@ for (measure in c("NMPresent", "Threshold20m", "Threshold40m")) {
 
 library(caret)
 
-fit_control <- trainControl(method = "cv",
-                            number = 10)
+MySummary  <- function(data, lev = NULL, model = NULL){
+  a1 <- defaultSummary(data, lev, model)
+  b1 <- twoClassSummary(data, lev, model)
+  c1 <- prSummary(data, lev, model)
+  out <- c(a1, b1, c1)
+  out}
+
+ctrl <- trainControl(method = "cv",
+                     number = 10,
+                     savePredictions = TRUE,
+                     summaryFunction = MySummary,
+                     classProbs = TRUE)
+
 PCA_DFA_Performance <- data.frame()
 
 # ├ Summary Indices ----
 
 for (measure in c("NMPresent", "Threshold20m", "Threshold40m")) {
-  for (numDays in seq(1,8)) {
+  for (numDays in seq(1,9)) {
     for (timeDay in c('dawn', 'solarNoon', 'dusk', 'day')) {
       data <- Indices_Summary %>% 
         filter(type == timeDay, audioDays == numDays) %>% 
@@ -114,33 +129,58 @@ for (measure in c("NMPresent", "Threshold20m", "Threshold40m")) {
       #select number of PCs to use (eigenvalues greater than 1? PCs to obtain >80 variance explained?)
       eig.val <- get_eigenvalue(PCA)
       
-      #extract PCs
+      #extract PCs - using PC's with eigenvalues >1
+      #PCA.data <- bind_cols(factor(data[,1], levels = c("0", "1")),
+      #                      PCA$x[,which(eig.val$eigenvalue >= 1)])
+      
+      #extract PCs - using PC's until at least 90% cumulative variance is explained
       PCA.data <- bind_cols(factor(data[,1], levels = c("0", "1")),
-                            PCA$x[,which(eig.val$eigenvalue >= 1)])
+                            PCA$x[,1:min(which(eig.val$cumulative.variance.percent >= 90))]) %>% 
+        mutate(...1 = factor(...1, 
+                             labels = make.names(levels(...1))))
+      
+      PCA.data$...1 <- factor(PCA.data$...1, levels=rev(levels(PCA.data$...1)))
       
       #Fit lda model using caret and cross-validation
       lda_model <- train(...1~.,
-                         data = PCA.data,
-                         method = "lda",
-                         metric = "Kappa",
-                         trControl = fit_control)
+                          data = PCA.data,
+                          method = "lda",
+                          metric = "Kappa",
+                          trControl = ctrl)
       
       PCA_DFA_Performance <- bind_rows(PCA_DFA_Performance,
                                        bind_cols(data.frame(measure = measure,
                                                             audioDays = numDays,
                                                             timeDay = timeDay,
                                                             indices = "Summary"),
-                                                 lda_model$results[,2:5]))
+                                                 lda_model$results[,c(2:19)]))
       
     }
   }
 }
 
+#Boxplot of AUC scores using Summary Indices
+Plot_DFA_AUC_SummaryIndices <- ggplot(PCA_DFA_Performance[PCA_DFA_Performance$indices == "Summary",], 
+       aes(x = audioDays, y = AUC, group = audioDays, colour = timeDay)) + 
+  geom_pointrange(aes(ymin = AUC - AUCSD, ymax = AUC + AUCSD), position = position_dodge2(width = 0.2)) + 
+  facet_wrap(~measure) +
+  scale_x_continuous(breaks = seq(1,9)) +
+  scale_y_continuous(limits = c(-0.05, 1.05)) +
+  xlab("Number of Audio Days") +
+  theme_bw() +
+  theme(legend.position = "bottom",
+        legend.direction = "horizontal") +
+  guides(colour = guide_legend(title = "Time of Day"))
+
+ggsave(file = "outputs/figures_2023/pca_dfa/PCA_DFA_ModelPerformance_SummaryIndices.png",
+       plot = Plot_DFA_AUC_SummaryIndices,
+       width = 12, height = 5)
+
 
 # ├ Spectral Aggregate Indices ----
 
 for (measure in c("NMPresent", "Threshold20m", "Threshold40m")) {
-  for (numDays in seq(1,8)) {
+  for (numDays in seq(1,9)) {
     for (timeDay in c('dawn', 'solarNoon', 'dusk', 'day')) {
       data <- Indices_SpectralAggregated %>% 
         filter(type == timeDay, audioDays == numDays) %>% 
@@ -152,24 +192,52 @@ for (measure in c("NMPresent", "Threshold20m", "Threshold40m")) {
       #select number of PCs to use (eigenvalues greater than 1? PCs to obtain >80 variance explained?)
       eig.val <- get_eigenvalue(PCA)
       
-      #extract PCs
+      #extract PCs - using PC's with eigenvalues >1
+      #PCA.data <- bind_cols(factor(data[,1], levels = c("0", "1")),
+      #                      PCA$x[,which(eig.val$eigenvalue >= 1)])
+      
+      #extract PCs - using PC's until at least 90% cumulative variance is explained
       PCA.data <- bind_cols(factor(data[,1], levels = c("0", "1")),
-                            PCA$x[,which(eig.val$eigenvalue >= 1)])
+                            PCA$x[,1:min(which(eig.val$cumulative.variance.percent >= 90))]) %>% 
+        mutate(...1 = factor(...1, 
+                             labels = make.names(levels(...1))))
+      
+      PCA.data$...1 <- factor(PCA.data$...1, levels=rev(levels(PCA.data$...1)))
       
       #Fit lda model using caret and cross-validation
       lda_model <- train(...1~.,
                          data = PCA.data,
                          method = "lda",
                          metric = "Kappa",
-                         trControl = fit_control)
+                         trControl = ctrl)
       
       PCA_DFA_Performance <- bind_rows(PCA_DFA_Performance,
                                        bind_cols(data.frame(measure = measure,
                                                             audioDays = numDays,
                                                             timeDay = timeDay,
                                                             indices = "SpectralAggregated"),
-                                                 lda_model$results[,2:5]))
+                                                 lda_model$results[,2:19]))
       
     }
   }
 }
+
+#Boxplot of AUC scores using Spectral Indices
+Plot_DFA_AUC_SpectralAggregatedIndices <- ggplot(PCA_DFA_Performance[PCA_DFA_Performance$indices == "SpectralAggregated",], 
+                                                 aes(x = audioDays, y = AUC, group = audioDays, colour = timeDay)) + 
+  geom_pointrange(aes(ymin = AUC - AUCSD, ymax = AUC + AUCSD), position = position_dodge2(width = 0.2)) + 
+  facet_wrap(~measure) +
+  scale_x_continuous(breaks = seq(1,9)) +
+  scale_y_continuous(limits = c(-0.05, 1.05)) +
+  xlab("Number of Audio Days") +
+  theme_bw() +
+  theme(legend.position = "bottom",
+        legend.direction = "horizontal") +
+  guides(colour = guide_legend(title = "Time of Day"))
+
+ggsave(file = "outputs/figures_2023/pca_dfa/PCA_DFA_ModelPerformance_SpectralAggregatedIndices.png",
+       plot = Plot_DFA_AUC_SpectralAggregatedIndices,
+       width = 12, height = 5)
+
+# Save Workspace ----
+save.image(file = "workspaces/PCA_DFA_NoisyMinerPresence.RData")
