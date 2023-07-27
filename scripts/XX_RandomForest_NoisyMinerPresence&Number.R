@@ -49,7 +49,7 @@ RF_Predictions_Regression <- list()
 pb = txtProgressBar(min = 0, max = 5*9*4, initial = 0, style = 3); k <- 0
 
 #Loop through models
-for (measure in c("NMPresent", "Threshold20m", "Threshold40m", "MeanMiner20m", "MeanMiner40m")) {
+for (measure in c("NMPresent", "Threshold20m", "Threshold40m", "MeanMiner20m", "MeanMiner40m")) {  
   for (numDays in seq(1,9)) {
     for (timeDay in c('dawn', 'solarNoon', 'dusk', 'day')) {
       rf_data <- Indices_SpectralAggregated %>% 
@@ -82,7 +82,7 @@ for (measure in c("NMPresent", "Threshold20m", "Threshold40m", "MeanMiner20m", "
         k <- k+1; setTxtProgressBar(pb, k)
       }
       
-      if (typeof(rf_data[,1]) == "numeric") {
+      if (typeof(rf_data[,1]) == "double") {
         rf_model <- train(rf_formula,
                           data = rf_data,
                           method = "cforest",
@@ -111,6 +111,8 @@ for (measure in c("NMPresent", "Threshold20m", "Threshold40m", "MeanMiner20m", "
   }
 }
 
+
+save.image(file = "workspaces/RandomForest_NoisyMinerPresence&Number.RData")
 
 DescTools::CCC(RF_Predictions_Regression$MeanMiner20m_dawn_1$.outcome, RF_Predictions_Regression$MeanMiner20m_dawn_1$obs)$rho.c
 
