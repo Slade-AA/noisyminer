@@ -160,12 +160,15 @@ for (measure in c("NMPresent", "Threshold20m", "Threshold40m")) {
 }
 
 #Boxplot of AUC scores using Summary Indices
+PCA_DFA_Performance$timeDay <- factor(PCA_DFA_Performance$timeDay, levels=c('dawn', 'day', 'dusk', 'solarNoon'))
+
 Plot_DFA_AUC_SummaryIndices <- ggplot(PCA_DFA_Performance[PCA_DFA_Performance$indices == "Summary",], 
        aes(x = audioDays, y = AUC, group = audioDays, colour = timeDay)) + 
   geom_pointrange(aes(ymin = AUC - AUCSD, ymax = AUC + AUCSD), position = position_dodge2(width = 0.2)) + 
   facet_wrap(~measure) +
   scale_x_continuous(breaks = seq(1,9)) +
   scale_y_continuous(limits = c(-0.05, 1.05)) +
+  scale_color_viridis_d(name = "Time of Day") +
   xlab("Number of Audio Days") +
   theme_bw() +
   theme(legend.position = "bottom",
@@ -229,6 +232,7 @@ Plot_DFA_AUC_SpectralAggregatedIndices <- ggplot(PCA_DFA_Performance[PCA_DFA_Per
   facet_wrap(~measure) +
   scale_x_continuous(breaks = seq(1,9)) +
   scale_y_continuous(limits = c(-0.05, 1.05)) +
+  scale_color_viridis_d(name = "Time of Day") +
   xlab("Number of Audio Days") +
   theme_bw() +
   theme(legend.position = "bottom",
