@@ -12,14 +12,14 @@ A total of xxx minutes of audio were analysed.
 ### Biodiversity data 
 Bird surveys were conducted on two seperate occassions during each sampling trip,
 
+Biodiversity metric | Definition
 -------|---------------
-**Biodiversity metrics**|
-Total Bird Diversity |
+**Total Bird Diversity** |
 Detected20 | Number of species detected in 20 minute surveys
 Detected40 | Number of species detected in 40 minute surveys
 Mean20m | Number of individuals detected in 20 minute surveys
 Mean40m | Number of individuals detected in 40 minute surveys
-Noisy Miner Diversity | 
+**Noisy Miner Diversity** | 
 NMPresent | Whether Noisy miners were detected during either of the two replicate surveys
 Threshold20m | Whether Noisy miners were present in numbers above a threshold (2.4 individuals)
 Threshold40m | Whether Noisy miners were present in numbers above a threshold (7 individuals)
