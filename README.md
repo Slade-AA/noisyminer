@@ -137,6 +137,12 @@ Using the summary indices, there appears to be some evidence that there are lowe
 ![](outputs/figures_2023/boxplots_NMPresence/SummaryIndices/Summary%20Indices%20-%20NMPresent%20-%20dawn%20-%205days.png)
 *Figure 3. Raincloud plots of Summary Indices for Noisy miner presence (1) and absence (0) at dawn using 5 days of audio.*
 
+
+From the R indices, ADI, AEI, and NDSI (and its components), showed the strongest relationship with Noisy miner presence. The below figures is from the dawn period using 6 days of audio recordings.
+
+![](RIndices-NMPresent-dawn-6days_ADI_AEI_NDSI.png)
+*Figure 4. Raincloud plots of select R Indices for Noisy miner presence (1) and absence (0) at dawn using 6 days of audio.*
+
 #### PCA plots of Noisy miner presence
 
 There was poor separation between Noisy miner presence variables using combinations of acoustic indices in a PCA at any time period (Figure 4).
@@ -155,7 +161,11 @@ We used linear discriminant analysis to try to classify the Noisy miner presence
 
 #### Individual acoustic indices vs Noisy miner numbers
 
+**Dawn**
+
 ![](outputs/figures_2023/scatterplots_NMNumbers/scatterplot_MeanMiner20m_dawn_5.png)
+
+**Dusk**
 
 ![](outputs/figures_2023/scatterplots_NMNumbers/scatterplot_MeanMiner20m_dusk_5.png)
 
