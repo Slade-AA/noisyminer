@@ -4,8 +4,6 @@ library(ggpubr)
 
 spectralIndices <- readRDS("outputs/Indices_SpectralAggregated_2023-07-18")
 
-
-
 for (measure in c('MeanMiner20m', 'MeanMiner40m')) {
   for (timeDay in c('dawn', 'solarNoon', 'dusk', 'day')) {
     for (numDays in unique(spectralIndices$audioDays)) {
@@ -13,6 +11,7 @@ for (measure in c('MeanMiner20m', 'MeanMiner40m')) {
       for (index in colnames(select(spectralIndices, ends_with(c("median"))))) {
         Scatterplots[[index]] <- ggplot(data = spectralIndices[spectralIndices$type == timeDay & spectralIndices$audioDays == numDays,], aes_string(x = measure, y = index)) +
           #labs(y = axisLabels[[gsub("_median", "", index)]]) +
+          geom_smooth(method = "gam") +
           geom_point() +
           theme_bw()
       }

@@ -19,14 +19,18 @@ R = function(pred, obs){
   sum((obs - mean(obs))*(pred - mean(pred))) / sqrt(sum((obs - mean(obs))^2)*sum((pred - mean(pred))^2))
 }
 
-allSummary <- readRDS("outputs/allSummary_2023-06-02")
+allSummary <- readRDS("outputs/Indices_Summary_2023-07-18")
 
 
 # Fit models ----
 
 prediction_results <- data.frame()
+
+#Progress bar
+pb = txtProgressBar(min = 0, max = 9*10, initial = 0, style = 3); k <- 0
+
 set.seed(1234)
-for (numDays in seq(1, 8)) {
+for (numDays in seq(1, 9)) {
   
   rf_data <- allSummary %>% filter(type == 'dawn' & audioDays == numDays)
   
@@ -48,7 +52,7 @@ for (numDays in seq(1, 8)) {
                       method = "rf",
                       metric = "RMSE",
                       tuneGrid = expand.grid(mtry = c(2,4,6,8,10)),
-                      ntree = 1000,
+                      ntree = 500,
                       trControl = fit_control)
     
     #print(rf_model)
@@ -90,8 +94,8 @@ for (numDays in seq(1, 8)) {
                         trControl = fit_control,
                         linout = 1,
                         trace = F,
-                        tuneGrid = expand.grid(decay = c(0.5, 0.1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6, 1e-7),
-                                               size = c(3, 4, 5, 6, 7, 8, 9, 10, 11)))
+                        tuneGrid = expand.grid(decay = c(0.5, 0.1, 1e-2, 1e-4, 1e-6),
+                                               size = c(3, 5, 7, 9, 11)))
     
     #Make predictions on test set
     predictions_nnet <- nnet_model %>% predict(testData)
@@ -243,16 +247,22 @@ for (numDays in seq(1, 8)) {
                                           MAE = MAE(obs_pred_gam_reduced_train$predicted, obs_pred_gam_reduced_train$observed),
                                           RMSE = RMSE(obs_pred_gam_reduced_train$predicted, obs_pred_gam_reduced_train$observed)))
     
+    k <- k+1; setTxtProgressBar(pb, k)
+    
   }
 }
 
+## Models started to fail at 9 days of audio data (Model has more coefficients than data)
 
-ggplot(prediction_results, aes(x = factor(audioDays, levels = c(1,2,3,4,5,6,7,8)), y = MAE, fill = method)) + 
+
+ggplot(prediction_results[prediction_results$audioDays < 9,], 
+       aes(x = factor(audioDays, levels = c(1,2,3,4,5,6,7,8)), y = MAE, fill = method)) + 
   geom_boxplot() +
   facet_wrap(~performance) +
   theme_bw()
 
-ggplot(prediction_results %>% filter(performance == 'train'), aes(x = factor(audioDays, levels = c(1,2,3,4,5,6,7,8)), y = MAE, fill = method)) + 
+ggplot(prediction_results %>% filter(performance == 'train', audioDays < 9), 
+       aes(x = factor(audioDays, levels = c(1,2,3,4,5,6,7,8)), y = MAE, fill = method)) + 
   geom_boxplot() +
   theme_bw()
 
@@ -267,6 +277,8 @@ ggplot(data = prediction_results, aes(x = factor(audioDays, levels = c(1,2,3,4,5
   geom_boxplot() +
   facet_wrap(~performance) +
   theme_bw()
+
+
 
 
 # Conditional random forest model ----
@@ -286,7 +298,7 @@ RandomForestPredictions_cforest <- list()
 pb = txtProgressBar(min = 0, max = 8 * 2, initial = 0, style = 3); k <- 0
 
 set.seed(1234)
-for (numDays in seq(1, 8)) {
+for (numDays in seq(1, 9)) {
   
   for (siteVariable in c("no_site", "site")) {
     
@@ -307,7 +319,7 @@ for (numDays in seq(1, 8)) {
                                                                                      method = "cforest",
                                                                                      tuneGrid = tunegrid_cforest,
                                                                                      trControl = control_cforest,
-                                                                                     controls = cforest_unbiased(ntree = 2000))
+                                                                                     controls = cforest_unbiased(ntree = 500))
     
     #Extract performance of best tune
     RandomForestPerformance_cforest <- bind_rows(RandomForestPerformance_cforest,
