@@ -129,7 +129,11 @@ for (measure in c("NMPresent", "Threshold20m", "Threshold40m")) {
                            color = after_scale(darken(color, .3, space = "HLS"))),
                        size = 4,
                        hjust = 0) +
-          stat_compare_means(label.x.npc = 0.45, hjust = 0.3) +
+          geom_text(aes(label = paste0("Wilcoxon, p = ", with(.data, round(wilcox.test(.data[[index]]~.data[[measure]])$p.value, 3)),
+                                       "\n Cohen's D = ", with(.data, round(effsize::cohen.d(.data[[index]],.data[[measure]])$estimate, 3))),
+                        x = -Inf, y = Inf, hjust = -0.7, vjust = 1.5),
+                    check_overlap = TRUE, size = 3.3) +
+          #stat_compare_means(label.x.npc = 0.45, hjust = 0.3) +
           scale_color_manual(values = pal, guide = "none") +
           scale_fill_manual(values = pal, guide = "none") +
           labs(x = measure, y = index) +
