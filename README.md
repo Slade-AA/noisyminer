@@ -159,11 +159,13 @@ Similarly low correlations were found for the Number of noisy miners. See [here]
 #### Individual Acoustic Indices and Noisy miner presence
 
 Using the spectral indices calculated at specific bands to detect Noisy miner presence, there seems to be some evidence that ACI and CVR (occasionally ENT and PMN too) are lower in the 4kHz-7kHz band when Noisy miners are present (during dawn and dusk). However, the effect sizes are small.
-![]("outputs/figures_2023/boxplots_NMPresence/Spectral Indices - NMPresent - dusk - 5days.png"")
+
+![]("outputs/figures_2023/boxplots_NMPresence/Spectral Indices - NMPresent - dusk - 5days.png")
 *Figure X. Raincloud plots of Spectral Indices for Noisy miner presence (1) and absence (0) at dusk using 5 days of audio.*
 
 
 Using the summary indices, there appears to be some evidence that there are lower values of HFC and NDSI and higher values of LFC when Noisy miners are present. This was detected during both dawn and dusk periods (e.g. Figure 3). However, like above, effect sizes are small.
+
 ![](outputs/figures_2023/boxplots_NMPresence/SummaryIndices/Summary Indices - NMPresent - dawn - 5days.png)
 *Figure 3. Raincloud plots of Summary Indices for Noisy miner presence (1) and absence (0) at dawn using 5 days of audio.*
 
