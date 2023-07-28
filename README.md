@@ -152,4 +152,11 @@ We used linear discriminant analysis to try to classify the Noisy miner presence
 
 ![](outputs/figures_2023/pca_dfa/PCA_DFA_ModelPerformance_SummaryIndices.png)
 
+
+#### Individual acoustic indices vs Noisy miner numbers
+
+![](outputs/figures_2023/scatterplots_NMNumbers/scatterplot_MeanMiner20m_dawn_5.png)
+
+![](outputs/figures_2023/scatterplots_NMNumbers/scatterplot_MeanMiner20m_dusk_5.png)
+
 #### Performance of Random forest models fit to all indices
