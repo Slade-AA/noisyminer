@@ -166,7 +166,7 @@ Using the spectral indices calculated at specific bands to detect Noisy miner pr
 
 Using the summary indices, there appears to be some evidence that there are lower values of HFC and NDSI and higher values of LFC when Noisy miners are present. This was detected during both dawn and dusk periods (e.g. Figure 3). However, like above, effect sizes are small.
 
-![](outputs/figures_2023/boxplots_NMPresence/SummaryIndices/Summary Indices - NMPresent - dawn - 5days.png)
+![]('outputs/figures_2023/boxplots_NMPresence/SummaryIndices/Summary Indices - NMPresent - dawn - 5days.png')
 *Figure 3. Raincloud plots of Summary Indices for Noisy miner presence (1) and absence (0) at dawn using 5 days of audio.*
 
 #### PCA plots of Noisy miner presence
