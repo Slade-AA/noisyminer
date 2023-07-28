@@ -160,20 +160,20 @@ Similarly low correlations were found for the Number of noisy miners. See [here]
 
 Using the spectral indices calculated at specific bands to detect Noisy miner presence, there seems to be some evidence that ACI and CVR (occasionally ENT and PMN too) are lower in the 4kHz-7kHz band when Noisy miners are present (during dawn and dusk). However, the effect sizes are small.
 
-![]("outputs/figures_2023/boxplots_NMPresence/Spectral Indices - NMPresent - dusk - 5days.png")
+![](outputs/figures_2023/boxplots_NMPresence/Spectral%20Indices%20-%20NMPresent%20-%20dusk%20-%205days.png)
 *Figure X. Raincloud plots of Spectral Indices for Noisy miner presence (1) and absence (0) at dusk using 5 days of audio.*
 
 
 Using the summary indices, there appears to be some evidence that there are lower values of HFC and NDSI and higher values of LFC when Noisy miners are present. This was detected during both dawn and dusk periods (e.g. Figure 3). However, like above, effect sizes are small.
 
-![]('outputs/figures_2023/boxplots_NMPresence/SummaryIndices/Summary Indices - NMPresent - dawn - 5days.png')
+![](outputs/figures_2023/boxplots_NMPresence/SummaryIndices/Summary%20Indices%20-%20NMPresent%20-%20dawn%20-%205days.png)
 *Figure 3. Raincloud plots of Summary Indices for Noisy miner presence (1) and absence (0) at dawn using 5 days of audio.*
 
 #### PCA plots of Noisy miner presence
 
 There was poor separation between Noisy miner presence variables using combinations of acoustic indices in a PCA at any time period (Figure 4).
 
-![](outputs/figures_2023/pca/SpectralAggregateIndices/Spectral Aggregate Indices - NMPresent - 5days.png)
+![](outputs/figures_2023/pca/SpectralAggregateIndices/Spectral%20Aggregate%20Indices%20-%20NMPresent%20-%205days.png)
 *Figure 4. PCA plots for Spectral Indices and the 'NMPresent' response (A:'dawn', B:'solarNoon', C:'dusk', D:'day'). Spectral indices used were ACI, CVR, ENT and PMN aggregated at four frequency bands (1.5kHz-4.0kHz, 2.0kHz - 3.0kHz, 4.0kHz - 7.0kHz, and 5.0kHz - 6.0kHz).*
 
 Attempting to use unique time-of-day periods per acoustic index (selected based on their highest correlation with MeanMiner40m) produced similar results (Figure 5).
