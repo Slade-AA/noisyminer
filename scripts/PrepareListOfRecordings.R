@@ -15,7 +15,8 @@ ListOfRecordings <- ListOfRecordings %>% rowwise() %>%  mutate(Site = strsplit(a
 #filter out recordings not within n days of on ground survey
 
 #load surveyDates
-surveyDates <- read.csv(file = "recordingsList/surveyDates.csv")
+#surveyDates <- read.csv(file = "recordingsList/surveyDates.csv")
+surveyDates <- read.csv(file = "recordingsList/surveyDates_updated.csv")
 
 ListOfRecordings <- ListOfRecordings %>% filter(Site %in% unique(surveyDates$SiteID)) #Only keep 50 survey sites
 
@@ -28,6 +29,7 @@ for (row in 1:nrow(ListOfRecordings)) {
 
 ListOfRecordings <- ListOfRecordings %>% filter(Within2 == "Yes")
 
-saveRDS(ListOfRecordings, file = "outputs/ListOfRecordings_within2OfSurveys.rds")
+#saveRDS(ListOfRecordings, file = "outputs/ListOfRecordings_within2OfSurveys.rds")
+saveRDS(ListOfRecordings, file = "outputs/ListOfRecordings_within2OfSurveys_updated.rds")
 
 #check whether recordings have already been analysed
