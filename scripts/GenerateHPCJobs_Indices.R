@@ -5,7 +5,8 @@ library(tidyverse)
 batchJobTemplate = "scripts/batchJobScript_calculateIndices.sh"
 
 #load list of recordings
-ListOfRecordings <- readRDS("recordingsList/RecordingList_20230412.rds")
+#ListOfRecordings <- readRDS("recordingsList/RecordingList_20230412.rds")
+ListOfRecordings <- readRDS("recordingsList/RecordingList_20230803.rds")
 
 
 #break rows into groups of =< 100 for batching and generate job scripts

@@ -1,0 +1,928 @@
+Folder PATH listing for volume Windows
+Volume serial number is AEBC-330A
+C:.
+|   .gitignore
+|   .Rhistory
+|   20191114_Continuous.rds
+|   acousticIndex_featureReduction.png
+|   acousticIndex_reduction.csv
+|   fileStructure.txt
+|   JobTest.sh
+|   loopTest.sh
+|   mergedData220509datesonly_dateformatfixed.xlsx
+|   noisyminer.Rproj
+|   PlanForAudioDownload.xlsx
+|   README.html
+|   README.md
+|   savingUnixCSV.R
+|   SR3_2020-06-28_20200628T000000%2B1100_Continuous.RDS
+|   SurveyDownloadTracker.xlsx
+|   tzs.RData
+|   tzs_BSites.RData
+|   URLEncodings.txt
+|   _indexTesting.R
+|   
++---HPCJobScripts
+|   |   JobScript1.sh
+|   |   JobScript10.sh
+|   |   JobScript100.sh
+|   |   JobScript101.sh
+|   |   JobScript102.sh
+|   |   JobScript103.sh
+|   |   JobScript104.sh
+|   |   JobScript105.sh
+|   |   JobScript106.sh
+|   |   JobScript107.sh
+|   |   JobScript108.sh
+|   |   JobScript109.sh
+|   |   JobScript11.sh
+|   |   JobScript110.sh
+|   |   JobScript111.sh
+|   |   JobScript112.sh
+|   |   JobScript113.sh
+|   |   JobScript114.sh
+|   |   JobScript115.sh
+|   |   JobScript116.sh
+|   |   JobScript117.sh
+|   |   JobScript118.sh
+|   |   JobScript119.sh
+|   |   JobScript12.sh
+|   |   JobScript120.sh
+|   |   JobScript121.sh
+|   |   JobScript122.sh
+|   |   JobScript123.sh
+|   |   JobScript124.sh
+|   |   JobScript125.sh
+|   |   JobScript126.sh
+|   |   JobScript127.sh
+|   |   JobScript128.sh
+|   |   JobScript129.sh
+|   |   JobScript13.sh
+|   |   JobScript130.sh
+|   |   JobScript131.sh
+|   |   JobScript132.sh
+|   |   JobScript133.sh
+|   |   JobScript134.sh
+|   |   JobScript135.sh
+|   |   JobScript136.sh
+|   |   JobScript137.sh
+|   |   JobScript138.sh
+|   |   JobScript139.sh
+|   |   JobScript14.sh
+|   |   JobScript140.sh
+|   |   JobScript141.sh
+|   |   JobScript142.sh
+|   |   JobScript143.sh
+|   |   JobScript144.sh
+|   |   JobScript145.sh
+|   |   JobScript146.sh
+|   |   JobScript147.sh
+|   |   JobScript148.sh
+|   |   JobScript149.sh
+|   |   JobScript15.sh
+|   |   JobScript150.sh
+|   |   JobScript151.sh
+|   |   JobScript152.sh
+|   |   JobScript153.sh
+|   |   JobScript154.sh
+|   |   JobScript155.sh
+|   |   JobScript156.sh
+|   |   JobScript157.sh
+|   |   JobScript158.sh
+|   |   JobScript159.sh
+|   |   JobScript16.sh
+|   |   JobScript160.sh
+|   |   JobScript161.sh
+|   |   JobScript162.sh
+|   |   JobScript163.sh
+|   |   JobScript164.sh
+|   |   JobScript165.sh
+|   |   JobScript166.sh
+|   |   JobScript167.sh
+|   |   JobScript168.sh
+|   |   JobScript169.sh
+|   |   JobScript17.sh
+|   |   JobScript170.sh
+|   |   JobScript171.sh
+|   |   JobScript172.sh
+|   |   JobScript173.sh
+|   |   JobScript174.sh
+|   |   JobScript175.sh
+|   |   JobScript176.sh
+|   |   JobScript177.sh
+|   |   JobScript178.sh
+|   |   JobScript179.sh
+|   |   JobScript18.sh
+|   |   JobScript180.sh
+|   |   JobScript181.sh
+|   |   JobScript182.sh
+|   |   JobScript183.sh
+|   |   JobScript184.sh
+|   |   JobScript185.sh
+|   |   JobScript186.sh
+|   |   JobScript187.sh
+|   |   JobScript188.sh
+|   |   JobScript189.sh
+|   |   JobScript19.sh
+|   |   JobScript190.sh
+|   |   JobScript191.sh
+|   |   JobScript192.sh
+|   |   JobScript193.sh
+|   |   JobScript194.sh
+|   |   JobScript195.sh
+|   |   JobScript196.sh
+|   |   JobScript197.sh
+|   |   JobScript198.sh
+|   |   JobScript199.sh
+|   |   JobScript2.sh
+|   |   JobScript20.sh
+|   |   JobScript200.sh
+|   |   JobScript201.sh
+|   |   JobScript202.sh
+|   |   JobScript203.sh
+|   |   JobScript204.sh
+|   |   JobScript205.sh
+|   |   JobScript206.sh
+|   |   JobScript207.sh
+|   |   JobScript208.sh
+|   |   JobScript209.sh
+|   |   JobScript21.sh
+|   |   JobScript210.sh
+|   |   JobScript211.sh
+|   |   JobScript212.sh
+|   |   JobScript213.sh
+|   |   JobScript214.sh
+|   |   JobScript215.sh
+|   |   JobScript216.sh
+|   |   JobScript217.sh
+|   |   JobScript218.sh
+|   |   JobScript219.sh
+|   |   JobScript22.sh
+|   |   JobScript220.sh
+|   |   JobScript221.sh
+|   |   JobScript222.sh
+|   |   JobScript223.sh
+|   |   JobScript224.sh
+|   |   JobScript225.sh
+|   |   JobScript226.sh
+|   |   JobScript227.sh
+|   |   JobScript228.sh
+|   |   JobScript229.sh
+|   |   JobScript23.sh
+|   |   JobScript230.sh
+|   |   JobScript231.sh
+|   |   JobScript232.sh
+|   |   JobScript233.sh
+|   |   JobScript234.sh
+|   |   JobScript235.sh
+|   |   JobScript236.sh
+|   |   JobScript237.sh
+|   |   JobScript238.sh
+|   |   JobScript239.sh
+|   |   JobScript24.sh
+|   |   JobScript240.sh
+|   |   JobScript241.sh
+|   |   JobScript242.sh
+|   |   JobScript243.sh
+|   |   JobScript244.sh
+|   |   JobScript245.sh
+|   |   JobScript246.sh
+|   |   JobScript247.sh
+|   |   JobScript248.sh
+|   |   JobScript249.sh
+|   |   JobScript25.sh
+|   |   JobScript250.sh
+|   |   JobScript251.sh
+|   |   JobScript252.sh
+|   |   JobScript253.sh
+|   |   JobScript254.sh
+|   |   JobScript255.sh
+|   |   JobScript256.sh
+|   |   JobScript257.sh
+|   |   JobScript258.sh
+|   |   JobScript259.sh
+|   |   JobScript26.sh
+|   |   JobScript260.sh
+|   |   JobScript261.sh
+|   |   JobScript262.sh
+|   |   JobScript263.sh
+|   |   JobScript264.sh
+|   |   JobScript265.sh
+|   |   JobScript266.sh
+|   |   JobScript267.sh
+|   |   JobScript268.sh
+|   |   JobScript269.sh
+|   |   JobScript27.sh
+|   |   JobScript270.sh
+|   |   JobScript271.sh
+|   |   JobScript272.sh
+|   |   JobScript273.sh
+|   |   JobScript274.sh
+|   |   JobScript275.sh
+|   |   JobScript276.sh
+|   |   JobScript277.sh
+|   |   JobScript278.sh
+|   |   JobScript279.sh
+|   |   JobScript28.sh
+|   |   JobScript280.sh
+|   |   JobScript281.sh
+|   |   JobScript282.sh
+|   |   JobScript283.sh
+|   |   JobScript284.sh
+|   |   JobScript285.sh
+|   |   JobScript286.sh
+|   |   JobScript287.sh
+|   |   JobScript288.sh
+|   |   JobScript289.sh
+|   |   JobScript29.sh
+|   |   JobScript290.sh
+|   |   JobScript291.sh
+|   |   JobScript292.sh
+|   |   JobScript293.sh
+|   |   JobScript294.sh
+|   |   JobScript295.sh
+|   |   JobScript296.sh
+|   |   JobScript297.sh
+|   |   JobScript298.sh
+|   |   JobScript299.sh
+|   |   JobScript3.sh
+|   |   JobScript30.sh
+|   |   JobScript300.sh
+|   |   JobScript301.sh
+|   |   JobScript302.sh
+|   |   JobScript303.sh
+|   |   JobScript304.sh
+|   |   JobScript305.sh
+|   |   JobScript31.sh
+|   |   JobScript32.sh
+|   |   JobScript33.sh
+|   |   JobScript34.sh
+|   |   JobScript35.sh
+|   |   JobScript36.sh
+|   |   JobScript37.sh
+|   |   JobScript38.sh
+|   |   JobScript39.sh
+|   |   JobScript4.sh
+|   |   JobScript40.sh
+|   |   JobScript41.sh
+|   |   JobScript42.sh
+|   |   JobScript43.sh
+|   |   JobScript44.sh
+|   |   JobScript45.sh
+|   |   JobScript46.sh
+|   |   JobScript47.sh
+|   |   JobScript48.sh
+|   |   JobScript49.sh
+|   |   JobScript5.sh
+|   |   JobScript50.sh
+|   |   JobScript51.sh
+|   |   JobScript52.sh
+|   |   JobScript53.sh
+|   |   JobScript54.sh
+|   |   JobScript55.sh
+|   |   JobScript56.sh
+|   |   JobScript57.sh
+|   |   JobScript58.sh
+|   |   JobScript59.sh
+|   |   JobScript6.sh
+|   |   JobScript60.sh
+|   |   JobScript61.sh
+|   |   JobScript62.sh
+|   |   JobScript63.sh
+|   |   JobScript64.sh
+|   |   JobScript65.sh
+|   |   JobScript66.sh
+|   |   JobScript67.sh
+|   |   JobScript68.sh
+|   |   JobScript69.sh
+|   |   JobScript7.sh
+|   |   JobScript70.sh
+|   |   JobScript71.sh
+|   |   JobScript72.sh
+|   |   JobScript73.sh
+|   |   JobScript74.sh
+|   |   JobScript75.sh
+|   |   JobScript76.sh
+|   |   JobScript77.sh
+|   |   JobScript78.sh
+|   |   JobScript79.sh
+|   |   JobScript8.sh
+|   |   JobScript80.sh
+|   |   JobScript81.sh
+|   |   JobScript82.sh
+|   |   JobScript83.sh
+|   |   JobScript84.sh
+|   |   JobScript85.sh
+|   |   JobScript86.sh
+|   |   JobScript87.sh
+|   |   JobScript88.sh
+|   |   JobScript89.sh
+|   |   JobScript9.sh
+|   |   JobScript90.sh
+|   |   JobScript91.sh
+|   |   JobScript92.sh
+|   |   JobScript93.sh
+|   |   JobScript94.sh
+|   |   JobScript95.sh
+|   |   JobScript96.sh
+|   |   JobScript97.sh
+|   |   JobScript98.sh
+|   |   JobScript99.sh
+|   |   _JobSubmission.txt
+|   |   
+|   \---_preChange
+|           JobScript1.sh
+|           JobScript10.sh
+|           JobScript100.sh
+|           JobScript101.sh
+|           JobScript102.sh
+|           JobScript103.sh
+|           JobScript104.sh
+|           JobScript105.sh
+|           JobScript106.sh
+|           JobScript107.sh
+|           JobScript108.sh
+|           JobScript109.sh
+|           JobScript11.sh
+|           JobScript110.sh
+|           JobScript111.sh
+|           JobScript112.sh
+|           JobScript113.sh
+|           JobScript114.sh
+|           JobScript115.sh
+|           JobScript116.sh
+|           JobScript117.sh
+|           JobScript118.sh
+|           JobScript119.sh
+|           JobScript12.sh
+|           JobScript120.sh
+|           JobScript121.sh
+|           JobScript122.sh
+|           JobScript123.sh
+|           JobScript124.sh
+|           JobScript125.sh
+|           JobScript126.sh
+|           JobScript127.sh
+|           JobScript128.sh
+|           JobScript129.sh
+|           JobScript13.sh
+|           JobScript130.sh
+|           JobScript131.sh
+|           JobScript132.sh
+|           JobScript133.sh
+|           JobScript134.sh
+|           JobScript135.sh
+|           JobScript136.sh
+|           JobScript137.sh
+|           JobScript138.sh
+|           JobScript139.sh
+|           JobScript14.sh
+|           JobScript140.sh
+|           JobScript141.sh
+|           JobScript142.sh
+|           JobScript143.sh
+|           JobScript144.sh
+|           JobScript145.sh
+|           JobScript146.sh
+|           JobScript147.sh
+|           JobScript148.sh
+|           JobScript149.sh
+|           JobScript15.sh
+|           JobScript150.sh
+|           JobScript151.sh
+|           JobScript152.sh
+|           JobScript153.sh
+|           JobScript154.sh
+|           JobScript155.sh
+|           JobScript156.sh
+|           JobScript157.sh
+|           JobScript158.sh
+|           JobScript159.sh
+|           JobScript16.sh
+|           JobScript160.sh
+|           JobScript161.sh
+|           JobScript162.sh
+|           JobScript163.sh
+|           JobScript164.sh
+|           JobScript165.sh
+|           JobScript166.sh
+|           JobScript167.sh
+|           JobScript168.sh
+|           JobScript169.sh
+|           JobScript17.sh
+|           JobScript170.sh
+|           JobScript171.sh
+|           JobScript172.sh
+|           JobScript173.sh
+|           JobScript174.sh
+|           JobScript175.sh
+|           JobScript176.sh
+|           JobScript177.sh
+|           JobScript178.sh
+|           JobScript179.sh
+|           JobScript18.sh
+|           JobScript180.sh
+|           JobScript181.sh
+|           JobScript182.sh
+|           JobScript183.sh
+|           JobScript184.sh
+|           JobScript185.sh
+|           JobScript186.sh
+|           JobScript187.sh
+|           JobScript188.sh
+|           JobScript189.sh
+|           JobScript19.sh
+|           JobScript190.sh
+|           JobScript191.sh
+|           JobScript192.sh
+|           JobScript193.sh
+|           JobScript194.sh
+|           JobScript195.sh
+|           JobScript196.sh
+|           JobScript197.sh
+|           JobScript198.sh
+|           JobScript199.sh
+|           JobScript2.sh
+|           JobScript20.sh
+|           JobScript200.sh
+|           JobScript201.sh
+|           JobScript202.sh
+|           JobScript203.sh
+|           JobScript204.sh
+|           JobScript205.sh
+|           JobScript206.sh
+|           JobScript207.sh
+|           JobScript208.sh
+|           JobScript209.sh
+|           JobScript21.sh
+|           JobScript210.sh
+|           JobScript211.sh
+|           JobScript212.sh
+|           JobScript213.sh
+|           JobScript214.sh
+|           JobScript215.sh
+|           JobScript216.sh
+|           JobScript217.sh
+|           JobScript218.sh
+|           JobScript219.sh
+|           JobScript22.sh
+|           JobScript220.sh
+|           JobScript221.sh
+|           JobScript222.sh
+|           JobScript223.sh
+|           JobScript224.sh
+|           JobScript225.sh
+|           JobScript226.sh
+|           JobScript227.sh
+|           JobScript228.sh
+|           JobScript229.sh
+|           JobScript23.sh
+|           JobScript230.sh
+|           JobScript231.sh
+|           JobScript232.sh
+|           JobScript233.sh
+|           JobScript234.sh
+|           JobScript235.sh
+|           JobScript236.sh
+|           JobScript237.sh
+|           JobScript238.sh
+|           JobScript239.sh
+|           JobScript24.sh
+|           JobScript240.sh
+|           JobScript241.sh
+|           JobScript242.sh
+|           JobScript243.sh
+|           JobScript244.sh
+|           JobScript245.sh
+|           JobScript246.sh
+|           JobScript247.sh
+|           JobScript248.sh
+|           JobScript249.sh
+|           JobScript25.sh
+|           JobScript250.sh
+|           JobScript251.sh
+|           JobScript252.sh
+|           JobScript253.sh
+|           JobScript254.sh
+|           JobScript255.sh
+|           JobScript256.sh
+|           JobScript257.sh
+|           JobScript258.sh
+|           JobScript259.sh
+|           JobScript26.sh
+|           JobScript260.sh
+|           JobScript261.sh
+|           JobScript262.sh
+|           JobScript263.sh
+|           JobScript264.sh
+|           JobScript265.sh
+|           JobScript266.sh
+|           JobScript267.sh
+|           JobScript268.sh
+|           JobScript269.sh
+|           JobScript27.sh
+|           JobScript270.sh
+|           JobScript271.sh
+|           JobScript272.sh
+|           JobScript273.sh
+|           JobScript274.sh
+|           JobScript275.sh
+|           JobScript276.sh
+|           JobScript277.sh
+|           JobScript278.sh
+|           JobScript279.sh
+|           JobScript28.sh
+|           JobScript280.sh
+|           JobScript281.sh
+|           JobScript282.sh
+|           JobScript283.sh
+|           JobScript284.sh
+|           JobScript285.sh
+|           JobScript286.sh
+|           JobScript287.sh
+|           JobScript288.sh
+|           JobScript289.sh
+|           JobScript29.sh
+|           JobScript290.sh
+|           JobScript291.sh
+|           JobScript292.sh
+|           JobScript293.sh
+|           JobScript294.sh
+|           JobScript295.sh
+|           JobScript296.sh
+|           JobScript297.sh
+|           JobScript298.sh
+|           JobScript299.sh
+|           JobScript3.sh
+|           JobScript30.sh
+|           JobScript300.sh
+|           JobScript301.sh
+|           JobScript302.sh
+|           JobScript303.sh
+|           JobScript304.sh
+|           JobScript305.sh
+|           JobScript31.sh
+|           JobScript32.sh
+|           JobScript33.sh
+|           JobScript34.sh
+|           JobScript35.sh
+|           JobScript36.sh
+|           JobScript37.sh
+|           JobScript38.sh
+|           JobScript39.sh
+|           JobScript4.sh
+|           JobScript40.sh
+|           JobScript41.sh
+|           JobScript42.sh
+|           JobScript43.sh
+|           JobScript44.sh
+|           JobScript45.sh
+|           JobScript46.sh
+|           JobScript47.sh
+|           JobScript48.sh
+|           JobScript49.sh
+|           JobScript5.sh
+|           JobScript50.sh
+|           JobScript51.sh
+|           JobScript52.sh
+|           JobScript53.sh
+|           JobScript54.sh
+|           JobScript55.sh
+|           JobScript56.sh
+|           JobScript57.sh
+|           JobScript58.sh
+|           JobScript59.sh
+|           JobScript6.sh
+|           JobScript60.sh
+|           JobScript61.sh
+|           JobScript62.sh
+|           JobScript63.sh
+|           JobScript64.sh
+|           JobScript65.sh
+|           JobScript66.sh
+|           JobScript67.sh
+|           JobScript68.sh
+|           JobScript69.sh
+|           JobScript7.sh
+|           JobScript70.sh
+|           JobScript71.sh
+|           JobScript72.sh
+|           JobScript73.sh
+|           JobScript74.sh
+|           JobScript75.sh
+|           JobScript76.sh
+|           JobScript77.sh
+|           JobScript78.sh
+|           JobScript79.sh
+|           JobScript8.sh
+|           JobScript80.sh
+|           JobScript81.sh
+|           JobScript82.sh
+|           JobScript83.sh
+|           JobScript84.sh
+|           JobScript85.sh
+|           JobScript86.sh
+|           JobScript87.sh
+|           JobScript88.sh
+|           JobScript89.sh
+|           JobScript9.sh
+|           JobScript90.sh
+|           JobScript91.sh
+|           JobScript92.sh
+|           JobScript93.sh
+|           JobScript94.sh
+|           JobScript95.sh
+|           JobScript96.sh
+|           JobScript97.sh
+|           JobScript98.sh
+|           JobScript99.sh
+|           _JobSubmission.txt
+|           
++---outputs
+|   |   allSummary_2023-06-02
+|   |   GPSLogs.csv
+|   |   GPS_Site.csv
+|   |   ListOfRecordings_within2OfSurveys.rds
+|   |   Site_suntimes.csv
+|   |   Site_suntimes.RDS
+|   |   SurveyDates.RDS
+|   |   
+|   +---data
+|   |       2022-07-12_acousticIndices_summary.RData
+|   |       2022-07-19_acousticIndices_summary.RData
+|   |       2022-08-04_acousticIndices_summary.RData
+|   |       acousticIndices_biodiversity.RDS
+|   |       acousticIndices_richness.RDS
+|   |       acousticIndices_richness_repscombined.RDS
+|   |       acousticIndices_summary.RData
+|   |       combinedIndices.RDS
+|   |       
+|   +---figures
+|   |   +---basicplots
+|   |   |   +---R1Only
+|   |   |   |   +---boxplots
+|   |   |   |   |       boxplot_NMPresent_dawn.png
+|   |   |   |   |       boxplot_NMPresent_day.png
+|   |   |   |   |       boxplot_NMPresent_dusk.png
+|   |   |   |   |       boxplot_NMPresent_solarNoon.png
+|   |   |   |   |       boxplot_Threshold20m_dawn.png
+|   |   |   |   |       boxplot_Threshold20m_day.png
+|   |   |   |   |       boxplot_Threshold20m_dusk.png
+|   |   |   |   |       boxplot_Threshold20m_solarNoon.png
+|   |   |   |   |       boxplot_Threshold40m_dawn.png
+|   |   |   |   |       boxplot_Threshold40m_day.png
+|   |   |   |   |       boxplot_Threshold40m_dusk.png
+|   |   |   |   |       boxplot_Threshold40m_solarNoon.png
+|   |   |   |   |       
+|   |   |   |   \---scatterplots
+|   |   |   |           scatterplot_Detected20_dawn.png
+|   |   |   |           scatterplot_Detected20_day.png
+|   |   |   |           scatterplot_Detected20_dusk.png
+|   |   |   |           scatterplot_Detected20_solarNoon.png
+|   |   |   |           scatterplot_Detected40_dawn.png
+|   |   |   |           scatterplot_Detected40_day.png
+|   |   |   |           scatterplot_Detected40_dusk.png
+|   |   |   |           scatterplot_Detected40_solarNoon.png
+|   |   |   |           scatterplot_Total20_dawn.png
+|   |   |   |           scatterplot_Total20_day.png
+|   |   |   |           scatterplot_Total20_dusk.png
+|   |   |   |           scatterplot_Total20_solarNoon.png
+|   |   |   |           scatterplot_Total40_dawn.png
+|   |   |   |           scatterplot_Total40_day.png
+|   |   |   |           scatterplot_Total40_dusk.png
+|   |   |   |           scatterplot_Total40_solarNoon.png
+|   |   |   |           scatterplot_TotalMiner20_dawn.png
+|   |   |   |           scatterplot_TotalMiner20_day.png
+|   |   |   |           scatterplot_TotalMiner20_dusk.png
+|   |   |   |           scatterplot_TotalMiner20_solarNoon.png
+|   |   |   |           scatterplot_TotalMiner40_dawn.png
+|   |   |   |           scatterplot_TotalMiner40_day.png
+|   |   |   |           scatterplot_TotalMiner40_dusk.png
+|   |   |   |           scatterplot_TotalMiner40_solarNoon.png
+|   |   |   |           
+|   |   |   \---R1R2Combined
+|   |   |       +---boxplots
+|   |   |       |       boxplot_NMPresent_dawn.png
+|   |   |       |       boxplot_NMPresent_day.png
+|   |   |       |       boxplot_NMPresent_dusk.png
+|   |   |       |       boxplot_NMPresent_solarNoon.png
+|   |   |       |       boxplot_Threshold20m_dawn.png
+|   |   |       |       boxplot_Threshold20m_day.png
+|   |   |       |       boxplot_Threshold20m_dusk.png
+|   |   |       |       boxplot_Threshold20m_solarNoon.png
+|   |   |       |       boxplot_Threshold40m_dawn.png
+|   |   |       |       boxplot_Threshold40m_day.png
+|   |   |       |       boxplot_Threshold40m_dusk.png
+|   |   |       |       boxplot_Threshold40m_solarNoon.png
+|   |   |       |       
+|   |   |       \---scatterplots
+|   |   |               scatterplot_Detected20_dawn.png
+|   |   |               scatterplot_Detected20_day.png
+|   |   |               scatterplot_Detected20_dusk.png
+|   |   |               scatterplot_Detected20_solarNoon.png
+|   |   |               scatterplot_Detected40_dawn.png
+|   |   |               scatterplot_Detected40_day.png
+|   |   |               scatterplot_Detected40_dusk.png
+|   |   |               scatterplot_Detected40_solarNoon.png
+|   |   |               scatterplot_Mean20m_dawn.png
+|   |   |               scatterplot_Mean20m_day.png
+|   |   |               scatterplot_Mean20m_dusk.png
+|   |   |               scatterplot_Mean20m_solarNoon.png
+|   |   |               scatterplot_Mean40m_dawn.png
+|   |   |               scatterplot_Mean40m_day.png
+|   |   |               scatterplot_Mean40m_dusk.png
+|   |   |               scatterplot_Mean40m_solarNoon.png
+|   |   |               scatterplot_MeanMiner20m_dawn.png
+|   |   |               scatterplot_MeanMiner20m_day.png
+|   |   |               scatterplot_MeanMiner20m_dusk.png
+|   |   |               scatterplot_MeanMiner20m_solarNoon.png
+|   |   |               scatterplot_MeanMiner40m_dawn.png
+|   |   |               scatterplot_MeanMiner40m_day.png
+|   |   |               scatterplot_MeanMiner40m_dusk.png
+|   |   |               scatterplot_MeanMiner40m_solarNoon.png
+|   |   |               
+|   |   +---bootstrapcorrelations
+|   |   |       BestIndicesPerTimePeriod.RDS
+|   |   |       Difference_correlationPlot_NumberNoisyMiner_spearman.png
+|   |   |       Difference_correlationPlot_total_diversity_AP_spearman.png
+|   |   |       Difference_correlationPlot_total_diversity_R_spearman.png
+|   |   |       R1Only_correlationPlot_NumberNoisyMiner_spearman.png
+|   |   |       R1Only_correlationPlot_total_diversity_AP_spearman.png
+|   |   |       R1Only_correlationPlot_total_diversity_ReducedSet_spearman.png
+|   |   |       R1Only_correlationPlot_total_diversity_R_spearman.png
+|   |   |       R1R2Combined_correlationPlot_NumberNoisyMiner_spearman.png
+|   |   |       R1R2Combined_correlationPlot_total_diversity_AP_spearman.png
+|   |   |       R1R2Combined_correlationPlot_total_diversity_ReducedSet_spearman.png
+|   |   |       R1R2Combined_correlationPlot_total_diversity_R_spearman.png
+|   |   |       workspace.RData
+|   |   |       
+|   |   +---modelperformance_ldapca
+|   |   |       spatial_R1Only.png
+|   |   |       spatial_R1Only_bal_accuracy.png
+|   |   |       temporal_R1Only.png
+|   |   |       
+|   |   +---modelperformance_lmpca
+|   |   +---modelperformance_rf&xgboost
+|   |   +---pca
+|   |   |       BestTimePeriodPerIndex_Threshold40m.png
+|   |   |       R1Only - DetectedMiner20.png
+|   |   |       R1Only - DetectedMiner40.png
+|   |   |       R1Only - MultipleCorrelationPCs - Abundance&Diversity20min.png
+|   |   |       R1Only - NMPresent.png
+|   |   |       R1Only - Threshold20m.png
+|   |   |       R1Only - Threshold40m.png
+|   |   |       R1R2Combined - NMPresent.png
+|   |   |       R1R2Combined - Threshold20m.png
+|   |   |       R1R2Combined - Threshold40m.png
+|   |   |       
+|   |   +---_old
+|   |   |   +---CVRabove0.15Removed
+|   |   |   |       Difference_correlationPlot_NumberNoisyMiner_spearman.png
+|   |   |   |       Difference_correlationPlot_total_diversity_AP_spearman.png
+|   |   |   |       Difference_correlationPlot_total_diversity_R_spearman.png
+|   |   |   |       R1Only_correlationPlot_NumberNoisyMiner_spearman.png
+|   |   |   |       R1Only_correlationPlot_total_diversity_AP_spearman.png
+|   |   |   |       R1Only_correlationPlot_total_diversity_R_spearman.png
+|   |   |   |       R1R2Combined_correlationPlot_NumberNoisyMiner_spearman.png
+|   |   |   |       R1R2Combined_correlationPlot_total_diversity_AP_spearman.png
+|   |   |   |       R1R2Combined_correlationPlot_total_diversity_R_spearman.png
+|   |   |   |       
+|   |   |   +---observedvspredicted_lmpca
+|   |   |   |   \---_original
+|   |   |   |           temporal_Diversity20m_dawnChorus.png
+|   |   |   |           temporal_Diversity20m_day.png
+|   |   |   |           temporal_Diversity20m_eveningChorus.png
+|   |   |   |           temporal_Diversity20m_solarNoon.png
+|   |   |   |           temporal_Diversity40m_dawnChorus.png
+|   |   |   |           temporal_Diversity40m_day.png
+|   |   |   |           temporal_Diversity40m_eveningChorus.png
+|   |   |   |           temporal_Diversity40m_solarNoon.png
+|   |   |   |           temporal_NumberNoisyMiner_dawnChorus.png
+|   |   |   |           temporal_NumberNoisyMiner_day.png
+|   |   |   |           temporal_NumberNoisyMiner_eveningChorus.png
+|   |   |   |           temporal_NumberNoisyMiner_solarNoon.png
+|   |   |   |           temporal_Total20m_dawnChorus.png
+|   |   |   |           temporal_Total20m_day.png
+|   |   |   |           temporal_Total20m_eveningChorus.png
+|   |   |   |           temporal_Total20m_solarNoon.png
+|   |   |   |           temporal_Total40m_dawnChorus.png
+|   |   |   |           temporal_Total40m_day.png
+|   |   |   |           temporal_Total40m_eveningChorus.png
+|   |   |   |           temporal_Total40m_solarNoon.png
+|   |   |   |           
+|   |   |   \---observedvspredicted_rf&xgboost
+|   |   |       \---_original
+|   |   |               xgboost_spatial_Diversity20m_dawnChorus.png
+|   |   |               xgboost_spatial_Diversity20m_day.png
+|   |   |               xgboost_spatial_Diversity20m_eveningChorus.png
+|   |   |               xgboost_spatial_Diversity20m_solarNoon.png
+|   |   |               xgboost_spatial_Diversity40m_dawnChorus.png
+|   |   |               xgboost_spatial_Diversity40m_day.png
+|   |   |               xgboost_spatial_Diversity40m_eveningChorus.png
+|   |   |               xgboost_spatial_Diversity40m_solarNoon.png
+|   |   |               xgboost_spatial_NumberNoisyMiner_dawnChorus.png
+|   |   |               xgboost_spatial_NumberNoisyMiner_day.png
+|   |   |               xgboost_spatial_NumberNoisyMiner_eveningChorus.png
+|   |   |               xgboost_spatial_NumberNoisyMiner_solarNoon.png
+|   |   |               xgboost_spatial_Total20m_dawnChorus.png
+|   |   |               xgboost_spatial_Total20m_day.png
+|   |   |               xgboost_spatial_Total20m_eveningChorus.png
+|   |   |               xgboost_spatial_Total20m_solarNoon.png
+|   |   |               xgboost_spatial_Total40m_dawnChorus.png
+|   |   |               xgboost_spatial_Total40m_day.png
+|   |   |               xgboost_spatial_Total40m_eveningChorus.png
+|   |   |               xgboost_spatial_Total40m_solarNoon.png
+|   |   |               
+|   |   +---_paul_forhismeeting
+|   |   |       BestTimePeriodPerIndex_Threshold40m.png
+|   |   |       R1Only_correlationPlot_NumberNoisyMiner_spearman.png
+|   |   |       R1Only_correlationPlot_total_diversity_AP_spearman.png
+|   |   |       R1Only_correlationPlot_total_diversity_R_spearman.png
+|   |   |       R1R2Combined_correlationPlot_NumberNoisyMiner_spearman.png
+|   |   |       R1R2Combined_correlationPlot_total_diversity_AP_spearman.png
+|   |   |       R1R2Combined_correlationPlot_total_diversity_R_spearman.png
+|   |   |       
+|   |   \---_paul_meeting01
+|   |           boxplot_pre_abs_day.png
+|   |           correlationPlot_NumberNoisyMiner_spearman.png
+|   |           correlationPlot_total_diversity_AP_spearman.png
+|   |           correlationPlot_total_diversity_R_spearman.png
+|   |           spatial.png
+|   |           xgboost_spatial_Diversity40m_dawnChorus.png
+|   |           xgboost_spatial_Total40m_dawnChorus.png
+|   |           
+|   +---indices
+|   |       spectralIndices_AP_CVR_ENT.RDS
+|   |       summaryIndices_AP.RDS
+|   |       summaryIndices_R.RDS
+|   |       
+|   +---indices_2023
+|   |       acousticIndices_featurereduction.RDS
+|   |       acousticIndices_spectral.RDS
+|   |       acousticIndices_summary.RDS
+|   |       
+|   \---workspaces
+|           RandomForest&Xgboost.RData
+|           
++---rawdata
+|       FinalDataR1Only.csv
+|       FinalMeanAll&R1Only.xlsx
+|       FinalMeanDataAllRepeats.csv
+|       FinalMeanDataAllRepeats.xlsx
+|       SummarySurveyData2019_2021.csv
+|       SummasrySurveyData2019_2021.xlsx
+|       
++---recordingsList
+|       curlCommand.txt
+|       ListOfRecordings.csv
+|       ListOfRecordings_within2OfSurveys.csv
+|       ListOfRecordings_within2OfSurveys.rds
+|       OLD_RecordingList_20230412.csv
+|       OLD_RecordingList_20230412.rds
+|       owncloud_propfind.txt
+|       RecordingList_20230412.csv
+|       RecordingList_20230412.rds
+|       surveyDates.csv
+|       
+\---scripts
+        AcousticIndexFeatureReduction.R
+        AggregateBirdNETOutput.R
+        AggregateIndices_AP.R
+        AggregateIndices_AP_SpectralIndices.R
+        AggregateIndices_R.R
+        BasicPlots.R
+        batchJobScript_calculateIndices.sh
+        BootstrapCorrelationPlots_Spearman.R
+        BootstrapCorrelationPlots_Spearman_ReducedSetOfIndices.R
+        CalculateIndices_AP.R
+        CalculateIndices_hardRain.R
+        CalculateIndices_R.R
+        CalculateSunriseSunsetTimes.R
+        CombineAPIndicesIntoRDSFiles.R
+        CombineIndices&Biodiversity.R
+        CreateSurveyDatesFile.R
+        extractFilenamesFromOwnCloud.R
+        functions_AcousticIndexFeatureReduction.R
+        function_combinedSD.R
+        GenerateHPCJobs_Indices.R
+        GenerateIndicesForAllRecordings.R
+        GenerateIndices_HPC.R
+        GPSLocationsFromLogs.R
+        PCA_DFA.R
+        PCA_LM.R
+        PCA_MultipleCorrelation_Abundance20min&Diversity20min.R
+        PrepareListOfRecordings.R
+        RandomForest&Xgboost.R
+        RandomForest.R
+        RunBirdNET.R
+        SummariseIndices.R
+        SummariseIndices_New.R
+        _adjustHPCJobScripts_password_removePNGs.R
+        _checkTZs.R
+        _manualDateFixRC6Recordings.R
+        _test_gettingTopIndex.R
+        _utility_numdaysbetweensamplingtrips.R
+        _WIP_DeterminingDaysOfAudioToAnalyse.R
+        _WIP_ExtractAcousticIndexSummariesFromRawOutputs.R
+        _WIP_SingleIndexCorrelations_TotalBirdDiversity.R
+        

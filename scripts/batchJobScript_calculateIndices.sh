@@ -21,7 +21,7 @@ echo "Job identifier is $PBS_JOBID"
 echo "Working directory is $PBS_O_WORKDIR"
 
 # this the path to the csv (relative to the directory on HPC storage where you launch the batch job)
-export data_file=NoisyMiner/RecordingList_20230412.csv
+export data_file=NoisyMiner/RecordingList_20230803.csv
 
 #perform loop to analyse multiple recordings per batch job
 set_size=5
@@ -67,12 +67,12 @@ for (( idx=start_row;  idx<=end_row; idx++ )); do
 	#download recording to scratch directory using curl and the recordingID extracted from the csvfile
 	module load curl
 	cd $scratchdir/$site
-	curl -u "zMIyOKUE3jdK0kS:Bioacoustics" -O -J "https://cloud.une.edu.au/public.php/webdav/$recordingPath"
+	curl -u "dF57xj7DmPOE3Oi:FiveCorners" -O -J "https://cloud.une.edu.au/public.php/webdav/Acoustic%20recordings/$recordingPath"
 	cd $PBS_O_WORKDIR
 	
 	#run AnalysisPrograms to create acoustic indices
 	singularity run $SING/ecoacoustics-21.7.0.4.sif AnalysisPrograms audio2csv "${scratchdir}/${site}/${recordingName}" AP/ConfigFiles/Towsey.Acoustic.yml $dirname --quiet --parallel --when-exit-copy-config
-	
+	rm $dirname/Towsey.Acoustic/*.png
 	#run R script to generate indices
 	module load R/4.1.2
 	/sw/containers/R-4.1.2.sif Rscript /home/jc696551/NoisyMiner/GenerateIndices_HPC.R
