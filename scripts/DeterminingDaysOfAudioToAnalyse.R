@@ -10,6 +10,9 @@ library(tidyverse)
 
 # ├├ Repeats combined ----
 
+removeOutliers = FALSE #TRUE or FALSE
+removeOutlierMethod = 'quantile' #'zscore' or 'quantile'
+
 biodiversity_R1R2combined <- readRDS("rawdata/FinalSummaryData.rds")
 
 #Extract Season and Year from SurveyIDR12 column
@@ -43,7 +46,7 @@ biodiversity_R1R2combined_SurveyDates <- biodiversity_R1R2combined_SurveyDates %
 biodiversity_R1R2combined_SurveyDates <- biodiversity_R1R2combined_SurveyDates %>% filter(Date2 - Date1 > 0 & Date2 - Date1 <= 12)
 
 #List sites
-sites <- gsub(".RDS", "", list.files(path = "G:/_combinedIndices_Total/", pattern = "*.RDS$"))
+sites <- gsub(".RDS", "", list.files(path = "D:/_combinedIndices_Total/", pattern = "*.RDS$"))
 
 for (indexSet in c("Indices_Summary", "Indices_SpectralAggregated", "Indices_FeatureReduction", "Indices_R")) {
   
@@ -56,22 +59,41 @@ for (indexSet in c("Indices_Summary", "Indices_SpectralAggregated", "Indices_Fea
   for (site in sites) {
     #Read in acoustic indices for specific site
     #SiteIndices <- readRDS(paste0("C:/Users/jc696551/Downloads/", site, ".RDS"))
-    SiteIndices <- readRDS(paste0("G:/_combinedIndices_Total/", site, ".RDS"))
+    SiteIndices <- readRDS(paste0("D:/_combinedIndices_Total/", site, ".RDS"))
     
+    SiteIndices[[indexSet]] <- SiteIndices[[indexSet]] %>% drop_na()
     
     indicesToSummarise <- colnames(SiteIndices[[indexSet]])[-c(1:3)] #create vector of acoustic index names that will be summarised below
     
     #Join suntimes to acoustic indices
     SiteIndices[[indexSet]] <- left_join(SiteIndices[[indexSet]], suntimes)
     
-    #Remove potential outliers - keep middle 99% of values - i.e., remove 0.005
-    quantiles <- lapply(SiteIndices[[indexSet]][indicesToSummarise], function (x) quantile(x, probs = c(0.005, 0.995), na.rm = TRUE))
-    
-    for (f in 1:length(quantiles)) {
-      SiteIndices[[indexSet]] <- SiteIndices[[indexSet]] %>% 
-        filter((!!sym(names(quantiles[f]))) > quantiles[[f]][[1]] & (!!sym(names(quantiles[f]))) < quantiles[[f]][[2]])
+    if (removeOutliers) {
+      
+      if (removeOutlierMethod == 'quantile') {
+        #Remove potential outliers - keep middle 99% of values - i.e., remove 0.005
+        quantiles <- lapply(SiteIndices[[indexSet]][indicesToSummarise], function (x) quantile(x, probs = c(0.005, 0.995), na.rm = TRUE))
+      }
+      
+      if (removeOutlierMethod == 'zscore') {
+        #or use z-scores?
+        z3values <- function(x) {
+          mean_x = mean(x)
+          sd_x = sd(x)
+          
+          z_minus3 = mean_x + (sd_x * -3)
+          z_plus3 = mean_x + (sd_x * 3)
+          
+          return(c(z_minus3, z_plus3))
+        }
+        quantiles <- lapply(SiteIndices[[indexSet]][indicesToSummarise], function (x) z3values(x))
+      }
+      
+      for (f in 1:length(quantiles)) {
+        SiteIndices[[indexSet]] <- SiteIndices[[indexSet]] %>% 
+          filter((!!sym(names(quantiles[f]))) > quantiles[[f]][[1]] & (!!sym(names(quantiles[f]))) < quantiles[[f]][[2]])
+      }
     }
-    
     
     surveys_Site <- biodiversity_R1R2combined_SurveyDates[biodiversity_R1R2combined_SurveyDates$SiteID == site,]
     
@@ -91,8 +113,6 @@ for (indexSet in c("Indices_Summary", "Indices_SpectralAggregated", "Indices_Fea
       
       #Determine the number of days within 2 that have day (sunrise to sunset) recordings (at least 75% of minutes)
       audioDaysWithin2days_day <- audioDaysWithin2days[which(sapply(audioDaysWithin2days, function(x) nrow(SiteIndices[[indexSet]][SiteIndices[[indexSet]]$Date == x & SiteIndices[[indexSet]]$Time >= (SiteIndices[[indexSet]]$sunrise) & SiteIndices[[indexSet]]$Time < (SiteIndices[[indexSet]]$sunset),])) >= sapply(audioDaysWithin2days, function(x) ((period_to_seconds(hm(gsub("[0-9]{4}\\-[0-9]{2}\\-[0-9]{2} ([0-9\\:]{5})\\:[0-9]{2}$","\\1",SiteIndices[[indexSet]]$sunset[SiteIndices[[indexSet]]$Date == x][1])) - hm(gsub("[0-9]{4}\\-[0-9]{2}\\-[0-9]{2} ([0-9\\:]{5})\\:[0-9]{2}$","\\1",SiteIndices[[indexSet]]$sunrise[SiteIndices[[indexSet]]$Date == x][1])))/60)*0.75)))]
-      
-      quantiles <- lapply(SiteIndices[[indexSet]][indicesToSummarise], function (x) quantile(x, probs = c(0.01, 0.99)))
       
       #Dawn Summary
       if (length(audioDaysWithin2days_dawn) > 0) {
@@ -228,6 +248,13 @@ for (indexSet in c("Indices_Summary", "Indices_SpectralAggregated", "Indices_Fea
   allSummary <- left_join(allSummary,
                           biodiversity_R1R2combined_SurveyDates %>% select(SurveyIDR12, Mean20m:Threshold40m))
   
-  saveRDS(allSummary, paste0("outputs/", indexSet, "_", Sys.Date()))
+  if (removeOutliers == FALSE) {
+    saveRDS(allSummary, paste0("outputs/", indexSet, "_", "noOutlierRemoval", "_", Sys.Date(), ".rds"))
+  } else if (removeOutliers == TRUE & removeOutlierMethod == 'zscore') {
+    saveRDS(allSummary, paste0("outputs/", indexSet, "_", "zscoreOutlierRemoval", "_", Sys.Date(), ".rds"))
+  } else if (removeOutliers == TRUE & removeOutlierMethod == 'quantile') {
+    saveRDS(allSummary, paste0("outputs/", indexSet, "_", "quantileOutlierRemoval", "_", Sys.Date(), ".rds"))
+  }
+  
   
 }

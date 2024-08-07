@@ -19,7 +19,7 @@ R = function(pred, obs){
   sum((obs - mean(obs))*(pred - mean(pred))) / sqrt(sum((obs - mean(obs))^2)*sum((pred - mean(pred))^2))
 }
 
-allSummary <- readRDS("outputs/Indices_Summary_2023-07-18")
+allSummary <- readRDS("outputs/Indices_Summary_2023-11-10")
 
 
 # Fit models ----
@@ -27,10 +27,10 @@ allSummary <- readRDS("outputs/Indices_Summary_2023-07-18")
 prediction_results <- data.frame()
 
 #Progress bar
-pb = txtProgressBar(min = 0, max = 9*10, initial = 0, style = 3); k <- 0
+pb = txtProgressBar(min = 0, max = 8*10, initial = 0, style = 3); k <- 0
 
 set.seed(1234)
-for (numDays in seq(1, 9)) {
+for (numDays in seq(1, 8)) {
   
   rf_data <- allSummary %>% filter(type == 'dawn' & audioDays == numDays)
   
@@ -298,7 +298,7 @@ RandomForestPredictions_cforest <- list()
 pb = txtProgressBar(min = 0, max = 8 * 2, initial = 0, style = 3); k <- 0
 
 set.seed(1234)
-for (numDays in seq(1, 9)) {
+for (numDays in seq(1, 8)) {
   
   for (siteVariable in c("no_site", "site")) {
     
